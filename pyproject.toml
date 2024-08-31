@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pynusinov"
+version = "0.0.2b5"
+authors = [
+  { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
+  { name="Oleg Zolotov", email="ovz.office@gmail.com" },
+]
+description = "Python-implementation of models of the ultraviolet radiation spectrum of the Sun"
+
+readme = "README.md"
+license = {file = "LICENSE"}
+
+keywords = ["Solar radiation", "model", "EUV", "FUV"]
+
+
+requires-python = ">=3.7"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Scientific/Engineering :: Physics"
+]
+dependencies=[
+    "xarray",
+    "numpy",
+    "pandas",
+    "netCDF4",
+    "importlib-resources"
+]
+
+[tool.setuptools]
+include-package-data=true
+
+[tool.setuptools.package-data]
+"pynusinov._coeffs" = [ "*.nc"]
