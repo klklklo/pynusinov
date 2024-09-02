@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynusinov"
-version = "0.0.2b5"
+version = "0.0.3a2"
 authors = [
   { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
   { name="Oleg Zolotov", email="ovz.office@gmail.com" },
@@ -29,11 +29,12 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics"
 ]
 dependencies=[
-    "xarray",
+    "importlib-resources",
+    "netcdf4",
     "numpy",
     "pandas",
-    "netCDF4",
-    "importlib-resources"
+    "xarray"
+
 ]
 
 [tool.setuptools]

@@ -28,7 +28,7 @@ class NusinovFUV:
         array = np.ones((tmp.size, 1), dtype=np.float64)
         return np.hstack([array, tmp])
 
-    def calc_spectra(self, Nlam):
+    def get_spectra(self, Nlam):
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 115-242 nm
