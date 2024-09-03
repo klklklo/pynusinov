@@ -10,7 +10,7 @@ class NusinovFUV:
     '''
 
     def __init__(self):
-        self._dataset = _m.get_nusinov_fuv()
+        self._dataset = _m.get_nusinov_fuvt()
         self._coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64), np.array(self._dataset['B1'], dtype=np.float64))).transpose()
 
     def _get_nlam(self, nlam):
