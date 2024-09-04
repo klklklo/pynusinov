@@ -38,7 +38,7 @@ class Euvt2021:
         '''
         nlam = self._get_nlam(lyman_alpha_corrected)
         res = np.dot(self._lines_coeffs, nlam.T) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('line', 'lyman_alpha'), res)},
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('line', 'lyman_alpha_corrected'), res)},
                           coords={'line': self._lines_dataset['line'].values,
                                   'lyman_alpha_corrected': nlam[:, 0],
                                   })
@@ -52,7 +52,7 @@ class Euvt2021:
         '''
         nlam = self._get_nlam(lyman_alpha_corrected)
         res = np.dot(self._bands_coeffs, nlam.T) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lyman_alpha'), res),
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lyman_alpha_corrected'), res),
                                      'lband' : ('band_number', self._bands_dataset['start'].values),
                                      'uband' : ('band_number', self._bands_dataset['stop'].values),
                                      'center' : ('band_number', self._bands_dataset['center'].values)},
