@@ -29,23 +29,6 @@ class Euvt2021:
         tmp1 = np.array([x ** 2 for x in tmp], dtype=np.float64)
         return np.hstack([tmp, tmp1])
 
-    def get_nlam_r(self, nlam):
-        if isinstance(nlam, float):
-            array = np.array([1., nlam], dtype=np.float64)
-            return array.reshape((1, 2))
-        tmp = np.array(nlam, dtype=np.float64)
-        tmp = tmp.reshape((tmp.size, 1))
-        array = np.ones((tmp.size, 1), dtype=np.float64)
-        return np.hstack([array, tmp])
-
-    def get_spectra_r(self, lyman_alpha_composite):
-        nlam = self.get_nlam_r(lyman_alpha_composite)
-        res = np.array(np.dot(self._lines_coeffs, nlam.T), dtype=np.float64) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('line', 'lyman_alpha_composite'), res)},
-                          coords={'line': self._lines_dataset['line'].values,
-                                  'lyman_alpha_composite': nlam[:, 0],
-                                  })
-
     def get_spectral_lines(self, lyman_alpha_composite: Union[float, np._typing.NDArray[float]]) -> xr.Dataset:
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
