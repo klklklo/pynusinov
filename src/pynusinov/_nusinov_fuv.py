@@ -14,7 +14,7 @@ class Fuvt2021:
         self._dataset = _m.get_nusinov_fuvt()
         self._coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64), np.array(self._dataset['B1'], dtype=np.float64))).transpose()
 
-    def _get_nlam(self, nlam: Union[float, np._typing.NDArray[float]]) -> np._typing.NDArray[float]:
+    def _get_nlam(self, nlam):
         '''
         A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
         the second with the values of the fluxes in the Lyman-alpha line
@@ -29,7 +29,7 @@ class Fuvt2021:
         array = np.ones((tmp.size, 1), dtype=np.float64)
         return np.hstack([array, tmp])
 
-    def get_spectra(self, lyman_alpha_corrected: Union[float, np._typing.NDArray[float]]) -> xr.Dataset:
+    def get_spectra(self, lyman_alpha_corrected):
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 115-242 nm

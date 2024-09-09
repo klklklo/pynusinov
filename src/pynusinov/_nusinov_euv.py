@@ -16,7 +16,7 @@ class Euvt2021:
         self._lines_coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
                                         np.array(self._lines_dataset['B1'], dtype=np.float64))).transpose()
 
-    def _get_nlam(self, lyman_alpha_composite: Union[float, np._typing.NDArray[float]]) -> np._typing.NDArray[float]:
+    def _get_nlam(self, lyman_alpha_composite):
         '''
         A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
         the second with the values of the fluxes in the Lyman-alpha line
@@ -46,7 +46,7 @@ class Euvt2021:
                                   'lyman_alpha_composite': nlam[:, 0],
                                   })
 
-    def get_spectral_lines(self, lyman_alpha_composite: Union[float, np._typing.NDArray[float]]) -> xr.Dataset:
+    def get_spectral_lines(self, lyman_alpha_composite):
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 10-105 nm
@@ -60,7 +60,7 @@ class Euvt2021:
                                   'lyman_alpha_composite': nlam[:, 0],
                                   })
 
-    def get_spectral_bands(self, lyman_alpha_composite: Union[float, np._typing.NDArray[float]]) -> xr.Dataset:
+    def get_spectral_bands(self, lyman_alpha_composite):
         '''
         Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
         of the spectrum of the interval 10-105 nm
