@@ -37,17 +37,17 @@ Output parameters:
 - xarray dataset
 
 ```
-<xarray.Dataset>
-Dimensions:         (band_center: 127, lyman_alpha: 1, lambda: 127)
+<xarray.Dataset> Size: 6kB
+Dimensions:                (band_center: 127, lyman_alpha_composite: 1, band_number: 127)
 Coordinates:
-  * band_center     (band_center) float64 115.5 116.5 117.5 ... 240.5 241.5
-  * lyman_alpha     (lyman_alpha) float64 <Nla input values>
-  * lambda          (lambda) int32 0 1 2 3 4 5 6 ... 120 121 122 123 124 125 126
+  * band_center            (band_center) float64 1kB 115.5 116.5 ... 240.5 241.5
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 8B <Nl input values>
+  * band_number            (band_number) int64 1kB 0 1 2 3 4 ... 123 124 125 126
 Data variables:
-    fuv_flux        (band_center, lyman_alpha) float64 <calculated spectrum>
-    lband           (lambda) int32 115 116 117 118 119 ... 237 238 239 240 241
-    uband           (lambda) int32 116 117 118 119 120 ... 238 239 240 241 242
-    fuv_line_width  (lambda) float64 1.0 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0 1.0 1.0
+    fuv_flux_spectra       (band_center, lyman_alpha_composite) float64 1kB 1...
+    lband                  (band_number) int64 1kB 115 116 117 ... 239 240 241
+    uband                  (band_number) int64 1kB 116 117 118 ... 240 241 242
+    fuv_band_width         (band_number) float64 1kB 1.0 1.0 1.0 ... 1.0 1.0 1.0
 ```
 
 ## Usage example
@@ -61,49 +61,49 @@ The following is an example of performing the described steps:
 ```
 >>> # importing a package with the alias p
 >>> import pynusinov as p
->>> # creating an instance of the NusinovFUV class
+>>> # creating an instance of the Fuvt2021 class
 >>> ex = p.Fuvt2021()
->>> # calculate the spectrum values at Nla = 3.31 (10^15) using calc_spectra()
+>>> # calculate the spectra values at Nla = 3.31 (10^15) using get_spectra()
 >>> spectra = ex.calc_spectra(3.31)
->>> # output the resulting FUV-spectrum
->>> print(red['fuv_flux']
+>>> # output the resulting FUV-spectra
+>>> print(spectra['fuv_flux_spectra'])
 
-<xarray.DataArray 'fuv_flux' (band_center: 127, lyman_alpha: 1)>
+<xarray.DataArray 'fuv_flux_spectra' (band_center: 127, lyman_alpha_composite: 1)> Size: 1kB
 array([[1.0226240e+13],
        [1.3365010e+13],
-       [4.3559230e+13],
 ...
        [4.5222314e+16],
        [5.3300029e+16]])
 Coordinates:
-  * band_center  (band_center) float64 115.5 116.5 117.5 ... 239.5 240.5 241.5
-  * lyman_alpha  (lyman_alpha) float64 3.31
+  * band_center            (band_center) float64 1kB 115.5 116.5 ... 240.5 241.5
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 8B 3.31
 ```
 
 If you need to calculate the spectrum for several Na values, pass them using a list:
 
 ```
->>> # calculate the spectrum values at Nla1 = 3.31 (10^15) and Nla2 = 7.12 (10^15) using calc_spectra()
->>> spectra = ex.calc_spectra([3.31, 7.12])
+>>> # calculate the spectrum values at Nl_1 = 3.31 (10^15) and Nl_2 = 7.12 (10^15) using get_spectra()
+>>> spectra = ex.get_spectra([3.31, 7.12])
 >>> # output the resulting FUV-spectrum
->>> print(red['fuv_flux']
+>>> print(spectra['fuv_flux_spectra'])
 
-<xarray.DataArray 'fuv_flux' (band_center: 127, lyman_alpha: 2)> Size: 2kB
+<xarray.DataArray 'fuv_flux_spectra' (band_center: 127, lyman_alpha_composite: 2)> Size: 2kB
 array([[1.0226240e+13, 1.7099480e+13],
        [1.3365010e+13, 1.7826520e+13],
 ...
        [4.5222314e+16, 4.7239328e+16],
        [5.3300029e+16, 5.5418008e+16]])
 Coordinates:
-  * band_center  (band_center) float64 1kB 115.5 116.5 117.5 ... 240.5 241.5
-  * lyman_alpha  (lyman_alpha) float64 16B 3.31 7.12
+  * band_center            (band_center) float64 1kB 115.5 116.5 ... 240.5 241.5
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 16B 3.31 7.12
 ```
 
 ## Euvt2021
 
-Implementation of the Nusinov model for calculating the spectrum of the extreme ultraviolet radiation of the Sun (EUV)
-in the wavelength range of 10-105 nm. The model is based on the idea of a linear dependence of radiation fluxes in intervals
-of unequal width on the intensity in the HeI helium line (l = 58.4 nm).
+Implementation of the Nusinov model for calculating the spectra of the extreme ultraviolet radiation of the Sun (EUV)
+in the wavelength range of 10-105 nm. This model calculates the ultraviolet spectra for an individual wavelength or 
+a wavelength interval. The model is based on the idea of a linear dependence of radiation fluxes in intervals
+of unequal width on the intensity in the HeI helium line (l = 58.4 nm). 
 
 Input parameters:
 - the flow in the HeI line Nl (in units of 10^15 m^-2 * s^-1)
@@ -111,63 +111,126 @@ Input parameters:
 Output parameters:
 - xarray dataset
 
+For calculations of the model by interval wavelength and by wavelength interval xarray is different:
+
 ```
-<xarray.Dataset> Size: 1kB
-Dimensions:      (band_center: 36, lyman_alpha: 1, lambda: 36)
+# wavelength interval
+<xarray.Dataset> Size: 968B
+Dimensions:                (band_center: 20, lyman_alpha_composite: 1,
+                            band_number: 20)
 Coordinates:
-  * band_center  (band_center) float64 288B 7.5 12.5 17.5 ... 102.6 103.2 102.5
-  * lyman_alpha  (lyman_alpha) float64 8B <Nl input values>
-  * lambda       (lambda) int32 144B 0 1 2 3 4 5 6 7 ... 28 29 30 31 32 33 34 35
+  * band_center            (band_center) float64 160B 7.5 12.5 ... 97.5 102.5
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 8B <Nl input values>
+  * band_number            (band_number) int64 160B 0 1 2 3 4 ... 15 16 17 18 19
 Data variables:
-    euv_flux     (band_center, lyman_alpha) float64 288B <calculated spectrum>
-    lband        (lambda) float64 288B 5.0 10.0 15.0 20.0 ... 102.6 103.2 100.0
-    uband        (lambda) float64 288B 10.0 15.0 20.0 25.0 ... 102.6 103.2 105.0
+    euv_flux_spectra       (band_center, lyman_alpha_composite) float64 160B ...
+    lband                  (band_number) int64 160B 5 10 15 20 ... 85 90 95 100
+    uband                  (band_number) int64 160B 10 15 20 25 ... 95 100 105
+    center                 (band_number) float64 160B 7.5 12.5 ... 97.5 102.5
+
+
+# wavelength line
+<xarray.Dataset> Size: 264B
+Dimensions:                (line: 16, lyman_alpha_composite: 1)
+Coordinates:
+  * line                   (line) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 8B <Nl input values>
+Data variables:
+    euv_flux_spectra       (line, lyman_alpha_composite) float64 128B ...
 ```
 
 ## Usage example
 
-- import the pynusinov package;
-- create an instance of the Euvt2021 class;
-- perform calculations with the created instance.
+This class contains two methods for calculating the spectrum:
+- get_spectral_bands() for calculating the spectrum in a wavelength interval;
+- get_spectral_lines() for calculating the spectrum for an individual wavelength.
 
-The following is an example of performing the described steps:
+The steps of work are similar to the steps described for the Fuvt2021 class. 
 
+Below is an example of working with the Fuvt2021 class:
+
+1. get_spectral_lines()
 ```
 >>> # importing a package with the alias p
 >>> import pynusinov as p
 >>> # creating an instance of the Euvt2021 class
 >>> ex = p.Euvt2021()
->>> # calculate the spectrum values at Nl = 3.31 (10^15) using calc_spectra()
->>> spectra = ex.calc_spectra(3.31)
->>> # >>> # output the resulting EUV-spectrum
->>> print(res['euv_flux'])
+>>> # calculate the spectrum values at Nl = 3.31 (10^15) using get_spectral_lines()
+>>> spectra = ex.get_spectral_lines(3.31)
+>>> # output the resulting EUV-spectra
+>>> print(spectra['euv_flux_spectra'])
 
-<xarray.DataArray 'euv_flux' (band_center: 36, lyman_alpha: 1)> Size: 288B
-array([[ 2.52122700e+12],
-       [ 2.59186240e+12],
-...
-       [ 5.22986620e+12],
-       [ 9.57620734e+13]])
+<xarray.DataArray 'euv_flux_spectra' (line: 16, lyman_alpha_composite: 1)> Size: 128B
+array([[ 1.07475700e+13],
+       [-3.48013400e+11],
+...   
+       [ 3.01426805e+13],
+       [ 5.22986620e+12]])
 Coordinates:
-  * band_center  (band_center) float64 288B 7.5 12.5 17.5 ... 102.6 103.2 102.5
-  * lyman_alpha  (lyman_alpha) float64 8B 3.31
+  * line                   (line) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 8B 3.31
 ```
 
 If you need to calculate the spectrum for several Na values, pass them using a list:
 
 ```
->>> # calculate the spectrum values at Nl = 3.31 (10^15) and Nla2 = 7.12 (10^15)  using calc_spectra()
->>> spectra = ex.calc_spectra([3.31, 7.12])
->>> # >>> # output the resulting EUV-spectrum
->>> print(res['euv_flux'])
+>>> # calculate the spectrum values at Nl_1 = 3.31 (10^15) and Nl_2 = 7.12 (10^15) using get_spectral_lines()
+>>> spectra = ex.get_spectral_lines([3.31, 7.12])
+>>> # output the resulting EUV-spectrum
+>>> print(spectra['euv_flux_spectra'])
 
-<xarray.DataArray 'euv_flux' (band_center: 36, lyman_alpha: 2)> Size: 576B
-array([[ 2.52122700e+12,  3.44494080e+13],
-       [ 2.59186240e+12,  2.14175296e+13],
+<xarray.DataArray 'euv_flux_spectra' (line: 16, lyman_alpha_composite: 2)> Size: 256B
+array([[ 1.07475700e+13,  6.92348800e+13],
+       [-3.48013400e+11,  1.29777664e+13],
 ...
-       [ 5.22986620e+12,  1.51018048e+13],
-       [ 9.57620734e+13,  2.62794074e+14]])
+       [ 3.01426805e+13,  9.21014720e+13],
+       [ 5.22986620e+12,  1.51018048e+13]])
 Coordinates:
-  * band_center  (band_center) float64 288B 7.5 12.5 17.5 ... 102.6 103.2 102.5
-  * lyman_alpha  (lyman_alpha) float64 16B 3.31 7.12
-  ```
+  * line                   (line) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 16B 3.31 7.12
+```
+
+2. get_spectral_bands()
+```
+>>> # importing a package with the alias p
+>>> import pynusinov as p
+>>> # creating an instance of the Euvt2021 class
+>>> ex = p.Euvt2021()
+>>> # calculate the spectrum values at Nl = 3.31 (10^15) using get_spectral_bands()
+>>> spectra = ex.get_spectral_bands(3.31)
+>>> # output the resulting EUV-spectra
+>>> print(spectra['euv_flux_spectra'])
+
+<xarray.DataArray 'euv_flux_spectra' (band_center: 20, lyman_alpha_composite: 1)> Size: 160B
+array([[2.52122700e+12],
+       [2.59186240e+12],
+...
+       [5.73289352e+13],
+       [9.57620734e+13]])
+Coordinates:
+  * band_center            (band_center) float64 160B 7.5 12.5 ... 97.5 102.5
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 8B 3.31
+```
+
+If you need to calculate the spectrum for several Na values, pass them using a list:
+
+```
+>>> # calculate the spectrum values at Nl_1 = 3.31 (10^15) and Nl_2 = 7.12 (10^15) using get_spectral_bands()
+>>> spectra = ex.get_spectral_bands([3.31, 7.12])
+>>> # output the resulting EUV-spectrum
+>>> print(spectra['euv_flux_spectra'])
+
+<xarray.DataArray 'euv_flux_spectra' (band_center: 20, lyman_alpha_composite: 2)> Size: 320B
+array([[2.52122700e+12, 3.44494080e+13],
+       [2.59186240e+12, 2.14175296e+13],
+...
+       [5.73289352e+13, 1.07909581e+14],
+       [9.57620734e+13, 2.62794074e+14]])
+Coordinates:
+  * band_center            (band_center) float64 160B 7.5 12.5 ... 97.5 102.5
+  * lyman_alpha_composite  (lyman_alpha_composite) float64 16B 3.31 7.12
+
+```
+
+
+

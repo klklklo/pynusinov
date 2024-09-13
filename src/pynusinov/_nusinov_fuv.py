@@ -1,6 +1,5 @@
 import numpy as np
 import xarray as xr
-from typing import Union
 import pynusinov._misc as _m
 
 
