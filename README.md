@@ -21,9 +21,9 @@ python -m pip install pynusinov
 
 pynusinov is the name of the package.
 
-The package contains two classes: NusinovEUV and NusinovFUV.
+The package contains two classes: Euvt2021 and Fuvt2021.
 
-## NusinovFUV
+## Fuvt2021
 
 Implementation of the Nusinov model for calculating the spectrum of far ultraviolet radiation from the Sun (FUV)
 in the wavelength range 115-242 nm. The model is based on the idea of a linear dependence of radiation fluxes in
@@ -53,7 +53,7 @@ Data variables:
 ## Usage example
 
 - import the pynusinov package;
-- create an instance of the NusinovFUV class;
+- create an instance of the Fuvt2021 class;
 - perform calculations with the created instance.
 
 The following is an example of performing the described steps:
@@ -62,7 +62,7 @@ The following is an example of performing the described steps:
 >>> # importing a package with the alias p
 >>> import pynusinov as p
 >>> # creating an instance of the NusinovFUV class
->>> ex = p.NusinovFUV()
+>>> ex = p.Fuvt2021()
 >>> # calculate the spectrum values at Nla = 3.31 (10^15) using calc_spectra()
 >>> spectra = ex.calc_spectra(3.31)
 >>> # output the resulting FUV-spectrum
@@ -99,7 +99,7 @@ Coordinates:
   * lyman_alpha  (lyman_alpha) float64 16B 3.31 7.12
 ```
 
-## NusinovEUV
+## Euvt2021
 
 Implementation of the Nusinov model for calculating the spectrum of the extreme ultraviolet radiation of the Sun (EUV)
 in the wavelength range of 10-105 nm. The model is based on the idea of a linear dependence of radiation fluxes in intervals
@@ -127,7 +127,7 @@ Data variables:
 ## Usage example
 
 - import the pynusinov package;
-- create an instance of the NusinovEUV class;
+- create an instance of the Euvt2021 class;
 - perform calculations with the created instance.
 
 The following is an example of performing the described steps:
@@ -135,8 +135,8 @@ The following is an example of performing the described steps:
 ```
 >>> # importing a package with the alias p
 >>> import pynusinov as p
->>> # creating an instance of the NusinovFUV class
->>> ex = p.NusinovEUV()
+>>> # creating an instance of the Euvt2021 class
+>>> ex = p.Euvt2021()
 >>> # calculate the spectrum values at Nl = 3.31 (10^15) using calc_spectra()
 >>> spectra = ex.calc_spectra(3.31)
 >>> # >>> # output the resulting EUV-spectrum
