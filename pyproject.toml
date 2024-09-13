@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynusinov"
-version = "0.0.3a2"
+version = "0.0.3b"
 authors = [
   { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
   { name="Oleg Zolotov", email="ovz.office@gmail.com" },
 ]
-description = "Python-implementation of models of the ultraviolet radiation spectrum of the Sun"
+description = "Python implementation of models of the ultraviolet radiation spectrum of the Sun"
 
 readme = "README.md"
 license = {file = "LICENSE"}
