@@ -12,7 +12,7 @@ Calculations. Remote Sens. 2021, 13, 1454. https://doi.org/10.3390/rs13081454
 
 <!--Users guide-->
 
-# Installation
+## Installation
 
 The following command is used to install the package:
 
