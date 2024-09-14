@@ -1,5 +1,0 @@
-importlib-resources
-netcdf4
-numpy
-pandas
-xarray
