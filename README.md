@@ -65,7 +65,7 @@ The following is an example of performing the described steps:
 >>> # creating an instance of the Fuvt2021 class
 >>> ex = p.Fuvt2021()
 >>> # calculate the spectra values at Nla = 3.31 (10^15) using get_spectra()
->>> spectra = ex.calc_spectra(3.31)
+>>> spectra = ex.get_spectra(3.31)
 >>> # output the resulting FUV-spectra
 >>> print(spectra['fuv_flux_spectra'])
 
