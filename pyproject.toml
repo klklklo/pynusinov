@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynusinov"
-version = "0.0.3b1"
+version = "0.0.3b2"
 authors = [
   { name="Anton Tatarnikov", email="tatarnikoffanton@yandex.ru" },
   { name="Oleg Zolotov", email="ovz.office@gmail.com" },
@@ -14,7 +14,7 @@ description = "Python implementation of models of the ultraviolet radiation spec
 readme = "README.md"
 license = {file = "LICENSE"}
 
-keywords = ["Solar radiation", "model", "EUV", "FUV"]
+keywords = ["Solar radiation model", "EUV", "FUV"]
 
 
 requires-python = ">=3.7"
@@ -25,6 +25,8 @@ classifiers = [
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: Apache Software License",
     "Topic :: Scientific/Engineering :: Physics"
 ]
