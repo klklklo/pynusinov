@@ -52,9 +52,12 @@ class Euvt2021:
         nlam = self._get_nlam(lyman_alpha_composite)
         res = np.dot(self._bands_coeffs, nlam.T) * 1.e15
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lyman_alpha_composite'), res),
-                                     'lband' : ('band_number', self._bands_dataset['start'].values),
-                                     'uband' : ('band_number', self._bands_dataset['stop'].values),
-                                     'center' : ('band_number', self._bands_dataset['center'].values)},
+                                     'lband': ('band_number', self._bands_dataset['start'].values),
+                                     'uband': ('band_number', self._bands_dataset['stop'].values),
+                                     'center': ('band_number', self._bands_dataset['center'].values)},
                           coords={'band_center': self._bands_dataset['center'].values,
                                   'lyman_alpha_composite': nlam[:, 0],
                                   'band_number': np.arange(20)})
+
+    def get_spectra(self, lyman_alpha_composite):
+        return self.get_spectral_lines(lyman_alpha_composite), self.get_spectral_bands(lyman_alpha_composite)
