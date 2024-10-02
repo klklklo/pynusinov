@@ -33,7 +33,7 @@ class Euvt2021:
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 10-105 nm
         :param lyman_alpha_composite: single value or list of flux values
-        :return: xarray Dataset [euv_flux, lband, uband]
+        :return: xarray Dataset [euv_flux]
         '''
         nlam = self._get_nlam(lyman_alpha_composite)
         res = np.dot(self._lines_coeffs, nlam.T) * 1.e15
@@ -60,4 +60,9 @@ class Euvt2021:
                                   'band_number': np.arange(20)})
 
     def get_spectra(self, lyman_alpha_composite):
+        '''
+        Model calculation method. Combines the get_spectra_lines() and get_spectral_bands() methods
+        :param lyman_alpha_composite: single value or list of flux values
+        :return: xarray Dataset [euv_flux, lband, uband], xarray Dataset [euv_flux_spectra, lband, uband, center],
+        '''
         return self.get_spectral_lines(lyman_alpha_composite), self.get_spectral_bands(lyman_alpha_composite)
