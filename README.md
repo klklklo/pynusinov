@@ -54,7 +54,7 @@ Data variables:
     fuv_band_width         (band_number) float64 1kB 1.0 1.0 1.0 ... 1.0 1.0 1.0
 ```
 
-### Usage example
+### Fuvt2021 usage example
 
 - import the pynusinov package;
 - create an instance of the Fuvt2021 class;
@@ -145,7 +145,7 @@ Data variables:
     euv_flux_spectra       (line, lyman_alpha_composite) float64 128B ...
 ```
 
-### Usage example
+### Euvt2021 usage example
 
 This class contains two methods for calculating the spectrum:
 - get_spectral_bands() for calculating the spectrum in a wavelength interval;
@@ -153,7 +153,7 @@ This class contains two methods for calculating the spectrum:
 
 The steps of work are similar to the steps described for the Fuvt2021 class. 
 
-Below is an example of working with the Fuvt2021 class:
+Below is an example of working with the Euvt2021 class:
 
 1. get_spectral_lines()
 ```
@@ -243,7 +243,7 @@ Coordinates:
 
 3. get_spectra()
 
-This method combines the get_spectral_bands() and get_spectral_lines() methods. The method returns a tuple (lines, bands), 
+This method combines the get_spectral_lines() and get_spectral_bands() methods. The method returns a tuple (lines, bands), 
 the first element is the flux in individual lines, the second is the flux in intervals. 
 
 ```
@@ -263,7 +263,9 @@ Coordinates:
   * line                   (line) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
   * lyman_alpha_composite  (lyman_alpha_composite) float64 8B 3.31
 Data variables:
-    euv_flux_spectra       (line, lyman_alpha_composite) float64 128B 1.075e+..., <xarray.Dataset> Size: 888B
+    euv_flux_spectra       (line, lyman_alpha_composite) float64 128B 1.075e+...
+
+<xarray.Dataset> Size: 888B
 Dimensions:                (band_center: 20, lyman_alpha_composite: 1,
                             band_number: 20)
 Coordinates:
