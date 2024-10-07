@@ -8,17 +8,17 @@ def read_coeffs(file):
     return xr.open_dataset(files('pynusinov._coeffs').joinpath(file))
 
 
-def get_nusinov_fuvt():
+def get_nusinov_fuvt_coeffs():
     return read_coeffs('nusinov_fuv.nc').copy()
 
 
-def get_nusinov_euvt():
+def get_nusinov_euvt_coeffs():
     return read_coeffs('euvt_spectral_bands.nc').copy(), read_coeffs('euvt_spectral_lines.nc').copy()
 
 
-def convert_LaCtoLaT(LaC):
-    LaC['euv_flux'] = 0.865 * LaC['euv_flux']
+def convert_lac_to_lat(lac):
+    return 0.865 * lac['euv_flux_spectra']
 
 
-def convert_LaTtoLaC(LaT):
-    LaT['euv_flux'] = LaT['euv_flux'] / 0.865
+def convert_lat_to_lac(lat):
+    return lat['euv_flux_spectra'] / 0.865

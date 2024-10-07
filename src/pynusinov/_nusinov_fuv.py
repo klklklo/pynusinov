@@ -10,7 +10,7 @@ class Fuvt2021:
     '''
 
     def __init__(self):
-        self._dataset = _m.get_nusinov_fuvt()
+        self._dataset = _m.get_nusinov_fuvt_coeffs()
         self._coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64), np.array(self._dataset['B1'], dtype=np.float64))).transpose()
 
     def _get_nlam(self, nlam):
@@ -28,19 +28,23 @@ class Fuvt2021:
         array = np.ones((tmp.size, 1), dtype=np.float64)
         return np.hstack([array, tmp])
 
-    def get_spectra(self, lyman_alpha_composite):
+    def get_spectra(self, lac):
+        return self.get_spectral_bands(lac)
+
+
+    def get_spectral_bands(self, lac):
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 115-242 nm
-        :param lyman_alpha_composite: single value or list of flux values
+        :param lac: single value or list of flux values
         :return: xarray Dataset [fuv_flux_spectra, lband, uband, fuv_band_width]
         '''
-        nlam = self._get_nlam(lyman_alpha_composite)
+        nlam = self._get_nlam(lac)
         res = np.array(np.dot(self._coeffs, nlam.T), dtype=np.float64) * 1.e15
-        return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lyman_alpha_composite'), res),
-                                     'lband' : ('band_number', np.arange(115, 242, 1)),
-                                     'uband' : ('band_number', np.arange(116, 243, 1)),
+        return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
+                                     'lband': ('band_number', np.arange(115, 242, 1)),
+                                     'uband': ('band_number', np.arange(116, 243, 1)),
                                      'fuv_band_width': ('band_number', np.ones(127))},
                           coords={'band_center': np.arange(115.5, 242.5, 1),
-                                  'lyman_alpha_composite': nlam[:, 1],
+                                  'lac': nlam[:, 1],
                                   'band_number': np.arange(127)})
