@@ -5,9 +5,9 @@ import pynusinov._misc as _m
 
 class Euvt2021:
     '''
-    Class of the model of the spectrum of extra ultraviolet radiation of the Sun (EUV) in
-    the wavelength range of 10-105 nm
+    EUVT model class.
     '''
+
     def __init__(self):
         self._bands_dataset, self._lines_dataset = _m.get_nusinov_euvt_coeffs()
         self._bands_coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
@@ -18,51 +18,57 @@ class Euvt2021:
     def _get_nlam(self, lac):
         '''
         A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
-        the second with the values of the fluxes in the Lyman-alpha line
-        :param lac: single value or list of flux values
-        :return: numpy-array for model calculation
+        the second with the values of the fluxes in the Lyman-alpha line.
+        :param lac: single value or list of flux values.
+        :return: numpy-array for model calculation.
         '''
-        if isinstance(lac, float):
-            return np.array([lac, lac ** 2], dtype=np.float64)[None, :]
-        tmp = np.array(lac, dtype=np.float64)[:, None]
-        tmp1 = np.array([x ** 2 for x in tmp], dtype=np.float64)
-        return np.hstack([tmp, tmp1])
+
+        try:
+            if isinstance(lac, float) or isinstance(lac, int):
+                return np.array([lac, lac ** 2], dtype=np.float64).reshape(1, 2)
+            return np.vstack([np.array([x, x ** 2]) for x in lac], dtype=np.float64)
+        except TypeError:
+            raise TypeError('Only int, float or array-like object types are allowed.')
 
     def get_spectral_lines(self, lac):
         '''
         Model calculation method. Returns the values of radiation fluxes in all lines
-        of the spectrum of the interval 10-105 nm
-        :param lac: single value or list of flux values
-        :return: xarray Dataset [euv_flux_spectra]
+        of the spectrum of the interval 10-105 nm.
+        :param lac: single value or list of flux values.
+        :return: xarray Dataset [euv_flux_spectra, line_lambda].
         '''
+
         nlam = self._get_nlam(lac)
         res = np.dot(self._lines_coeffs, nlam.T) * 1.e15
-        return xr.Dataset(data_vars={'euv_flux_spectra': (('line', 'lac'), res)},
-                          coords={'line': self._lines_dataset['line'].values,
-                                  'lac': nlam[:, 0],
-                                  })
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('lambda', 'lac'), res),
+                                     'line_lambda': ('line_number', self._lines_dataset['lambda'].values)},
+                          coords={'line_number': np.arange(16),
+                                  'lambda': self._lines_dataset['lambda'].values,
+                                  'lac': nlam[:, 0]})
 
     def get_spectral_bands(self, lac):
         '''
         Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
-        of the spectrum of the interval 10-105 nm
-        :param lac: single value or list of flux values
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center]
+        of the spectrum of the interval 10-105 nm.
+        :param lac: single value or list of flux values.
+        :return: xarray Dataset [euv_flux_spectra, lband, uband, center].
         '''
+
         nlam = self._get_nlam(lac)
         res = np.dot(self._bands_coeffs, nlam.T) * 1.e15
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
-                                     'lband': ('band_number', self._bands_dataset['start'].values),
-                                     'uband': ('band_number', self._bands_dataset['stop'].values),
+                                     'lband': ('band_number', self._bands_dataset['lband'].values),
+                                     'uband': ('band_number', self._bands_dataset['uband'].values),
                                      'center': ('band_number', self._bands_dataset['center'].values)},
-                          coords={'band_center': self._bands_dataset['center'].values,
-                                  'lac': nlam[:, 0],
-                                  'band_number': np.arange(20)})
+                          coords={'band_number': np.arange(20),
+                                  'band_center': self._bands_dataset['center'].values,
+                                  'lac': nlam[:, 0]})
 
     def get_spectra(self, lac):
         '''
-        Model calculation method. Combines the get_spectra_lines() and get_spectral_bands() methods
-        :param lac: single value or list of flux values
-        :return: xarray Dataset [euv_flux_spectra], xarray Dataset [euv_flux_spectra, lband, uband, center]
+        Model calculation method. Combines the get_spectral_bands() and  get_spectra_lines() methods.
+        :param lac: single value or list of flux values.
+        :return: xarray Dataset [euv_flux_spectra, lband, uband, center], xarray Dataset [euv_flux_spectra, line_lambda]
         '''
+
         return self.get_spectral_bands(lac), self.get_spectral_lines(lac)

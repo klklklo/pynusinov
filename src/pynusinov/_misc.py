@@ -9,11 +9,11 @@ def read_coeffs(file):
 
 
 def get_nusinov_fuvt_coeffs():
-    return read_coeffs('nusinov_fuv.nc').copy()
+    return read_coeffs('fuvt_bands_coeffs.nc').copy()
 
 
 def get_nusinov_euvt_coeffs():
-    return read_coeffs('euvt_spectral_bands.nc').copy(), read_coeffs('euvt_spectral_lines.nc').copy()
+    return read_coeffs('euvt_bands_coeffs.nc').copy(), read_coeffs('euvt_lines_coeffs.nc').copy()
 
 
 def convert_lac_to_lat(lac):
