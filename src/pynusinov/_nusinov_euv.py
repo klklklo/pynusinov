@@ -19,7 +19,7 @@ class Euvt2021:
         '''
         A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
         the second with the values of the fluxes in the Lyman-alpha line.
-        :param lac: single value or list of flux values.
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
         :return: numpy-array for model calculation.
         '''
 
@@ -34,7 +34,7 @@ class Euvt2021:
         '''
         Model calculation method. Returns the values of radiation fluxes in all lines
         of the spectrum of the interval 10-105 nm.
-        :param lac: single value or list of flux values.
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
         :return: xarray Dataset [euv_flux_spectra, line_lambda].
         '''
 
@@ -50,16 +50,15 @@ class Euvt2021:
         '''
         Model calculation method. Returns the xarray dataset values of radiation fluxes in all intervals
         of the spectrum of the interval 10-105 nm.
-        :param lac: single value or list of flux values.
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center].
+        :param lac: single value or list of flux value in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1)s.
+        :return: xarray Dataset [euv_flux_spectra, lband, uband].
         '''
 
         nlam = self._get_nlam(lac)
         res = np.dot(self._bands_coeffs, nlam.T) * 1.e15
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', self._bands_dataset['lband'].values),
-                                     'uband': ('band_number', self._bands_dataset['uband'].values),
-                                     'center': ('band_number', self._bands_dataset['center'].values)},
+                                     'uband': ('band_number', self._bands_dataset['uband'].values)},
                           coords={'band_number': np.arange(20),
                                   'band_center': self._bands_dataset['center'].values,
                                   'lac': nlam[:, 0]})
@@ -67,8 +66,8 @@ class Euvt2021:
     def get_spectra(self, lac):
         '''
         Model calculation method. Combines the get_spectral_bands() and  get_spectra_lines() methods.
-        :param lac: single value or list of flux values.
-        :return: xarray Dataset [euv_flux_spectra, lband, uband, center], xarray Dataset [euv_flux_spectra, line_lambda]
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
+        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, line_lambda]
         '''
 
         return self.get_spectral_bands(lac), self.get_spectral_lines(lac)

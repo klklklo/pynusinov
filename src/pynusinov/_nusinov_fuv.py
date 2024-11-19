@@ -17,7 +17,7 @@ class Fuvt2021:
         '''
         A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
         the second with the values of the fluxes in the Lyman-alpha line.
-        :param lac: single value or list of flux values.
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
         :return: numpy-array for model calculation.
         '''
 
@@ -32,7 +32,7 @@ class Fuvt2021:
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 115-242 nm.
-        :param lac: single value or list of flux values.
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
         :return: xarray Dataset [fuv_flux_spectra, lband, uband, fuv_band_width].
         '''
 
@@ -47,4 +47,11 @@ class Fuvt2021:
                                   'band_number': np.arange(127)})
 
     def get_spectra(self, lac):
+        '''
+        Model calculation method. Used to unify the interface with Euvt2021 class. Calls the
+        get_spectral_bands() method with the parameters passed to get_spectra().
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
+        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, line_lambda]
+        '''
+
         return self.get_spectral_bands(lac)

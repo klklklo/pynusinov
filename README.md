@@ -34,11 +34,11 @@ in the wavelength range 115-242 nm. The model is based on the idea of a linear d
 1 nm wide intervals on the intensity in the Lyman-alpha hydrogen line (l = 121.6 nm).
 
 Input parameters:
-- flow in the Lyman-alpha line Nla (in units of 10<sup>15</sup> m<sup>-2</sup> s<sup>-1</sup>). You can set one or more Nla values.
-Use a list to pass multiple values.
+- flow in the Lyman-alpha line N<sub>La</sub> in lac unit (1 lac = 1 * 10<sup>15</sup> m<sup>-2</sup> s<sup>-1</sup>). 
+You can set one or more N<sub>La</sub> values. Use a list to pass multiple values.
 
 Output parameters:
-- xarray dataset
+- xarray dataset.
 
 ```
 <xarray.Dataset> Size: 5kB
@@ -70,7 +70,7 @@ This class contains two methods for calculating the spectrum:
 import pynusinov as p
 # creating an instance of the Fuvt2021 class
 ex = p.Fuvt2021()
-# calculate the spectra values at Nla = 3.31 (10^15) using get_spectral_bands()
+# calculate the spectra values at N_La = 3.31 lac unit using get_spectral_bands()
 spectra = ex.get_spectral_bands(3.31)
 # output the resulting FUV-spectra
 print(spectra['fuv_flux_spectra'])
@@ -87,10 +87,10 @@ Coordinates:
   * lac          (lac) float64 8B 3.31
 ```
 
-If you need to calculate the spectrum for several Na values, pass them using a list:
+If you need to calculate the spectrum for several N<sub>La</sub> values, pass them using a list:
 
 ```
-# calculate the spectrum values at Nl_1 = 3.31 (10^15) and Nl_2 = 7.12 (10^15) using get_spectral_bands()
+# calculate the spectrum values at N_La_1 = 3.31 lac unit and N_La_2 = 7.12 lac unit using get_spectral_bands()
 spectra = ex.get_spectral_bands([3.31, 7.12])
 # output the resulting FUV-spectrum
 print(spectra['fuv_flux_spectra'])
@@ -108,6 +108,7 @@ Coordinates:
 ```
 
 2. get_spectra()
+
 This method is used to unify the use of the pynusinov package classes. get_spectra() internally calls the 
 get_spectral_bands() method with the parameters passed to get_spectra().
 
@@ -120,10 +121,11 @@ a wavelength interval. The model is based on the idea of a linear dependence of 
 of unequal width on the intensity in the HeI helium line (l = 58.4 nm). 
 
 Input parameters:
-- the flow in the HeI line Nl (in units of 10<sup>15</sup> m<sup>-2</sup> s<sup>-1</sup>)
+- flow in the Lyman-alpha line N<sub>La</sub> in lac unit (1 lac = 1 * 10<sup>15</sup> m<sup>-2</sup> s<sup>-1</sup>). 
+You can set one or more N<sub>La</sub> values. Use a list to pass multiple values.
 
 Output parameters:
-- xarray dataset
+- xarray dataset.
 
 For calculations of the model by interval wavelength and by wavelength interval xarray is different:
 
@@ -170,7 +172,7 @@ Below is an example of working with the Euvt2021 class:
 import pynusinov as p
 # creating an instance of the Euvt2021 class
 ex = p.Euvt2021()
-# calculate the spectrum values at Nl = 3.31 (10^15) using get_spectral_bands()
+# calculate the spectrum values at N_La = 3.31 lac unit using get_spectral_bands()
 spectrum = ex.get_spectral_bands(3.31)
 # output the resulting EUV-spectra
 print(spectrum['euv_flux_spectra'])
@@ -187,10 +189,10 @@ Coordinates:
   * lac          (lac) float64 8B 3.31
 ```
 
-If you need to calculate the spectrum for several Na values, pass them using a list:
+If you need to calculate the spectrum for several N<sub>La</sub> values, pass them using a list:
 
 ```
-# calculate the spectrum values at Nl_1 = 3.31 (10^15) and Nl_2 = 7.12 (10^15) using get_spectral_bands()
+# calculate the spectrum values at N_La_1 = 3.31 lac unit and N_La_2 = 7.12 lac unit using get_spectral_bands()
 spectra = ex.get_spectral_bands([3.31, 7.12])
 # output the resulting EUV-spectrum
 print(spectra['euv_flux_spectra'])
@@ -213,7 +215,7 @@ Coordinates:
 import pynusinov as p
 # creating an instance of the Euvt2021 class
 ex = p.Euvt2021()
-# calculate the spectrum values at Nl = 3.31 (10^15) using get_spectral_lines()
+# calculate the spectrum values at N_La = 3.31 lac unit using get_spectral_lines()
 spectra = ex.get_spectral_lines(3.31)
 # output the resulting EUV-spectra
 print(spectra['euv_flux_spectra'])
@@ -230,10 +232,10 @@ Coordinates:
   * lac      (lac) float64 8B 3.31
 ```
 
-If you need to calculate the spectrum for several Na values, pass them using a list:
+If you need to calculate the spectrum for several N<sub>La</sub> values, pass them using a list:
 
 ```
-# calculate the spectrum values at Nl_1 = 3.31 (10^15) and Nl_2 = 7.12 (10^15) using get_spectral_lines()
+# calculate the spectrum values at N_La_1 = 3.31 lac unit and N_La_2 = 7.12 lac unit using get_spectral_lines()
 spectra = ex.get_spectral_lines([3.31, 7.12])
 # output the resulting EUV-spectrum
 print(spectra['euv_flux_spectra'])
