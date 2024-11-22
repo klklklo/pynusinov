@@ -33,15 +33,14 @@ class Fuvt2021:
         Model calculation method. Returns the values of radiation fluxes in all intervals
         of the spectrum of the interval 115-242 nm.
         :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
-        :return: xarray Dataset [fuv_flux_spectra, lband, uband, fuv_band_width].
+        :return: xarray Dataset [fuv_flux_spectra, lband, uband].
         '''
 
         nlam = self._get_nlam(lac)
         res = np.array(np.dot(self._coeffs, nlam.T), dtype=np.float64) * 1.e15
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', np.arange(115, 242, 1)),
-                                     'uband': ('band_number', np.arange(116, 243, 1)),
-                                     'fuv_band_width': ('band_number', np.ones(127))},
+                                     'uband': ('band_number', np.arange(116, 243, 1))},
                           coords={'band_center': np.arange(115.5, 242.5, 1),
                                   'lac': nlam[:, 1],
                                   'band_number': np.arange(127)})
