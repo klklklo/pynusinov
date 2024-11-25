@@ -41,8 +41,8 @@ class Fuvt2021:
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', np.arange(115, 242, 1)),
                                      'uband': ('band_number', np.arange(116, 243, 1))},
-                          coords={'band_center': np.arange(115.5, 242.5, 1),
-                                  'lac': nlam[:, 1],
+                          coords={'lac': nlam[:, 1],
+                                  'band_center': np.arange(115.5, 242.5, 1),
                                   'band_number': np.arange(127)})
 
     def get_spectra(self, lac):

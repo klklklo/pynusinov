@@ -41,17 +41,16 @@ Output parameters:
 - xarray dataset.
 
 ```
-<xarray.Dataset> Size: 5kB
+<xarray.Dataset> Size: 4kB
 Dimensions:           (band_center: 127, lac: 1, band_number: 127)
 Coordinates:
-  * band_center       (band_center) float64 1kB 115.5 116.5 ... 240.5 241.5
   * lac               (lac) float64 8B <Input Lyman alpha values>
+  * band_center       (band_center) float64 1kB 115.5 116.5 ... 240.5 241.5
   * band_number       (band_number) int32 508B 0 1 2 3 4 ... 122 123 124 125 126
 Data variables:
     fuv_flux_spectra  (band_center, lac) float64 1kB <Output spectrum>
     lband             (band_number) int32 508B 115 116 117 118 ... 239 240 241
     uband             (band_number) int32 508B 116 117 118 119 ... 240 241 242
-    fuv_band_width    (band_number) float64 1kB 1.0 1.0 1.0 1.0 ... 1.0 1.0 1.0
 ```
 
 ### Fuvt2021 usage example
@@ -83,8 +82,8 @@ array([[1.0226240e+13],
        [4.5222314e+16],
        [5.3300029e+16]])
 Coordinates:
-  * band_center  (band_center) float64 1kB 115.5 116.5 117.5 ... 240.5 241.5
   * lac          (lac) float64 8B 3.31
+  * band_center  (band_center) float64 1kB 115.5 116.5 117.5 ... 240.5 241.5
 ```
 
 If you need to calculate the spectrum for several N<sub>La</sub> values, pass them using a list:
@@ -103,8 +102,8 @@ array([[1.0226240e+13, 1.7099480e+13],
        [4.5222314e+16, 4.7239328e+16],
        [5.3300029e+16, 5.5418008e+16]])
 Coordinates:
-  * band_center  (band_center) float64 1kB 115.5 116.5 117.5 ... 240.5 241.5
   * lac          (lac) float64 16B 3.31 7.12
+  * band_center  (band_center) float64 1kB 115.5 116.5 117.5 ... 240.5 241.5
 ```
 
 2. get_spectra()
@@ -131,29 +130,28 @@ For calculations of the model by interval wavelength and by wavelength interval 
 
 ```
 # wavelength interval
-<xarray.Dataset> Size: 888B
+<xarray.Dataset> Size: 728B
 Dimensions:           (band_center: 20, lac: 1, band_number: 20)
 Coordinates:
-  * band_number       (band_number) int32 80B 0 1 2 3 4 5 ... 14 15 16 17 18 19
-  * band_center       (band_center) float64 160B 7.5 12.5 17.5 ... 97.5 102.5
   * lac               (lac) float64 8B <Input Lyman alpha values>
+  * band_center       (band_center) float64 160B 7.5 12.5 17.5 ... 97.5 102.5
+  * band_number       (band_number) int32 80B 0 1 2 3 4 5 ... 14 15 16 17 18 19
 Data variables:
     euv_flux_spectra  (band_center, lac) float64 160B <Output spectrum>
     lband             (band_number) int64 160B 5 10 15 20 25 ... 80 85 90 95 100
     uband             (band_number) int64 160B 10 15 20 25 30 ... 90 95 100 105
-    center            (band_number) float64 160B 7.5 12.5 17.5 ... 97.5 102.5
 
 
 # wavelength line
 <xarray.Dataset> Size: 456B
-Dimensions:           (lambda: 16, lac: 1, line_number: 16)
+Dimensions:           (line_wavelength: 16, lac: 1, line_number: 16)
 Coordinates:
-  * line_number       (line_number) int32 64B 0 1 2 3 4 5 ... 10 11 12 13 14 15
-  * lambda            (lambda) float64 128B 25.6 28.4 30.4 ... 97.7 102.6 103.2
   * lac               (lac) float64 8B <Input Lyman alpha values>
+  * line_wavelength   (line_wavelength) float64 128B 25.6 28.4 ... 102.6 103.2
+  * line_number       (line_number) int32 64B 0 1 2 3 4 5 ... 10 11 12 13 14 15
 Data variables:
-    euv_flux_spectra  (lambda, lac) float64 128B <Output spectrum>
-    line_lambda       (line_number) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
+    euv_flux_spectra  (line_wavelength, lac) float64 <Output spectrum>
+    wavelength        (line_number) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
 ```
 
 ### Euvt2021 usage example
@@ -185,8 +183,8 @@ array([[2.52122700e+12],
        [5.73289352e+13],
        [9.57620734e+13]])
 Coordinates:
-  * band_center  (band_center) float64 160B 7.5 12.5 17.5 ... 92.5 97.5 102.5
   * lac          (lac) float64 8B 3.31
+  * band_center  (band_center) float64 160B 7.5 12.5 17.5 ... 92.5 97.5 102.5
 ```
 
 If you need to calculate the spectrum for several N<sub>La</sub> values, pass them using a list:
@@ -205,8 +203,8 @@ array([[2.52122700e+12, 3.44494080e+13],
        [5.73289352e+13, 1.07909581e+14],
        [9.57620734e+13, 2.62794074e+14]])
 Coordinates:
-  * band_center  (band_center) float64 160B 7.5 12.5 17.5 ... 92.5 97.5 102.5
   * lac          (lac) float64 16B 3.31 7.12
+  * band_center  (band_center) float64 160B 7.5 12.5 17.5 ... 92.5 97.5 102.5
 ```
 
 2. get_spectral_lines()
@@ -221,15 +219,15 @@ spectra = ex.get_spectral_lines(3.31)
 print(spectra['euv_flux_spectra'])
 
 
-<xarray.DataArray 'euv_flux_spectra' (lambda: 16, lac: 1)> Size: 128B
+<xarray.DataArray 'euv_flux_spectra' (line_wavelength: 16, lac: 1)> Size: 128B
 array([[ 1.07475700e+13],
        [-3.48013400e+11],
 ...
        [ 3.01426805e+13],
        [ 5.22986620e+12]])
 Coordinates:
-  * lambda   (lambda) float64 128B 25.6 28.4 30.4 36.8 ... 78.9 97.7 102.6 103.2
-  * lac      (lac) float64 8B 3.31
+  * lac              (lac) float64 8B 3.31
+  * line_wavelength  (line_wavelength) float64 128B 25.6 28.4 ... 102.6 103.2
 ```
 
 If you need to calculate the spectrum for several N<sub>La</sub> values, pass them using a list:
@@ -241,15 +239,15 @@ spectra = ex.get_spectral_lines([3.31, 7.12])
 print(spectra['euv_flux_spectra'])
 
 
-<xarray.DataArray 'euv_flux_spectra' (lambda: 16, lac: 2)> Size: 256B
+<xarray.DataArray 'euv_flux_spectra' (line_wavelength: 16, lac: 2)> Size: 256B
 array([[ 1.07475700e+13,  6.92348800e+13],
        [-3.48013400e+11,  1.29777664e+13],
 ...
        [ 3.01426805e+13,  9.21014720e+13],
        [ 5.22986620e+12,  1.51018048e+13]])
 Coordinates:
-  * lambda   (lambda) float64 128B 25.6 28.4 30.4 36.8 ... 78.9 97.7 102.6 103.2
-  * lac      (lac) float64 16B 3.31 7.12
+  * lac              (lac) float64 16B 3.31 7.12
+  * line_wavelength  (line_wavelength) float64 128B 25.6 28.4 ... 102.6 103.2
 ```
 
 3. get_spectra()
