@@ -28,6 +28,9 @@ class Fuvt2021:
         except TypeError:
             raise TypeError('Only int, float or array-like object types are allowed.')
 
+    def _predict(self, matrix_a, vector_x):
+        return np.dot(matrix_a, vector_x) * 1.e15
+
     def get_spectral_bands(self, lac):
         '''
         Model calculation method. Returns the values of radiation fluxes in all intervals
@@ -37,7 +40,7 @@ class Fuvt2021:
         '''
 
         nlam = self._get_nlam(lac)
-        res = np.array(np.dot(self._coeffs, nlam.T), dtype=np.float64) * 1.e15
+        res = self._predict(self._coeffs, nlam.T)
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', np.arange(115, 242, 1)),
                                      'uband': ('band_number', np.arange(116, 243, 1))},
@@ -50,7 +53,7 @@ class Fuvt2021:
         Model calculation method. Used to unify the interface with Euvt2021 class. Calls the
         get_spectral_bands() method with the parameters passed to get_spectra().
         :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
-        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, line_lambda]
+        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, line_lambda].
         '''
 
         return self.get_spectral_bands(lac)

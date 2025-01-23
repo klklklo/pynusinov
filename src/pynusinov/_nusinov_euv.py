@@ -9,7 +9,10 @@ class Euvt2021:
     '''
 
     def __init__(self):
-        self._bands_dataset, self._lines_dataset = _m.get_nusinov_euvt_coeffs()
+        self._bands_dataset, self._lines_dataset, self._full_dataset = _m.get_nusinov_euvt_coeffs()
+
+        self._full_coeffs = np.vstack((np.array(self._full_dataset['B0'], dtype=np.float64),
+                                        np.array(self._full_dataset['B1'], dtype=np.float64))).transpose()
         self._bands_coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
                                         np.array(self._bands_dataset['B1'], dtype=np.float64))).transpose()
         self._lines_coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
@@ -30,6 +33,9 @@ class Euvt2021:
         except TypeError:
             raise TypeError('Only int, float or array-like object types are allowed.')
 
+    def _predict(self, matrix_a, vector_x):
+        return np.dot(matrix_a, vector_x) * 1.e15
+
     def get_spectral_lines(self, lac):
         '''
         Model calculation method. Returns the values of radiation fluxes in all lines
@@ -39,7 +45,7 @@ class Euvt2021:
         '''
 
         nlam = self._get_nlam(lac)
-        res = np.dot(self._lines_coeffs, nlam.T) * 1.e15
+        res = self._predict(self._lines_coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'lac'), res),
                                      'wavelength': ('line_number', self._lines_dataset['lambda'].values)},
                           coords={'lac': nlam[:, 0],
@@ -55,7 +61,7 @@ class Euvt2021:
         '''
 
         nlam = self._get_nlam(lac)
-        res = np.dot(self._bands_coeffs, nlam.T) * 1.e15
+        res = self._predict(self._bands_coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', self._bands_dataset['lband'].values),
                                      'uband': ('band_number', self._bands_dataset['uband'].values)},
@@ -67,7 +73,23 @@ class Euvt2021:
         '''
         Model calculation method. Combines the get_spectral_bands() and  get_spectra_lines() methods.
         :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
-        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, wavelength]
+        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, wavelength].
         '''
 
         return self.get_spectral_bands(lac), self.get_spectral_lines(lac)
+
+    def predict(self, lac):
+        '''
+        Model calculation method.
+        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
+        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, wavelength].
+        '''
+
+        nlam = self._get_nlam(lac)
+        res = self._predict(self._full_coeffs, nlam.T)
+        return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
+                                     'lband': ('band_number', self._full_dataset['lband'].values),
+                                     'uband': ('band_number', self._full_dataset['uband'].values)},
+                          coords={'lac': nlam[:, 0],
+                                  'band_center': self._full_dataset['center'].values,
+                                  'band_number': np.arange(36)})

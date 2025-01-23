@@ -31,7 +31,7 @@ The package contains two classes: Euvt2021 and Fuvt2021.
 
 Implementation of the Nusinov model for calculating the spectrum of far ultraviolet radiation from the Sun (FUV)
 in the wavelength range 115-242 nm. The model is based on the idea of a linear dependence of radiation fluxes in
-1 nm wide intervals on the intensity in the Lyman-alpha hydrogen line (l = 121.6 nm).
+1 nm wide intervals on the intensity in the Lyman-alpha hydrogen line (λ = 121.6 nm).
 
 Input parameters:
 - flow in the Lyman-alpha line N<sub>La</sub> in lac unit (1 lac = 1 * 10<sup>15</sup> m<sup>-2</sup> s<sup>-1</sup>). 
@@ -117,7 +117,7 @@ get_spectral_bands() method with the parameters passed to get_spectra().
 Implementation of the Nusinov model for calculating the spectra of the extreme ultraviolet radiation of the Sun (EUV)
 in the wavelength range of 10-105 nm. This model calculates the ultraviolet spectra for an individual wavelength or 
 a wavelength interval. The model is based on the idea of a linear dependence of radiation fluxes in intervals
-of unequal width on the intensity in the HeI helium line (l = 58.4 nm). 
+of unequal width on the intensity in the HeI helium line (λ = 58.4 nm). 
 
 Input parameters:
 - flow in the Lyman-alpha line N<sub>La</sub> in lac unit (1 lac = 1 * 10<sup>15</sup> m<sup>-2</sup> s<sup>-1</sup>). 
@@ -150,15 +150,30 @@ Coordinates:
   * line_wavelength   (line_wavelength) float64 128B 25.6 28.4 ... 102.6 103.2
   * line_number       (line_number) int32 64B 0 1 2 3 4 5 ... 10 11 12 13 14 15
 Data variables:
-    euv_flux_spectra  (line_wavelength, lac) float64 <Output spectrum>
+    euv_flux_spectra  (line_wavelength, lac) float64 128B <Output spectrum>
     wavelength        (line_number) float64 128B 25.6 28.4 30.4 ... 102.6 103.2
+    
+    
+# mixed dataset (lines and intervals)
+<xarray.Dataset> Size: 1kB
+Dimensions:           (band_center: 36, lac: 1, band_number: 36)
+Coordinates:
+  * lac               (lac) float64 8B <Input Lyman alpha values>
+  * band_center       (band_center) float64 288B 7.5 12.5 17.5 ... 103.2 102.5
+  * band_number       (band_number) int32 144B 0 1 2 3 4 5 ... 30 31 32 33 34 35
+Data variables:
+    euv_flux_spectra  (band_center, lac) float64 288B <Output spectrum>
+    lband             (band_number) float64 288B 5.0 10.0 15.0 ... 103.2 100.0
+    uband             (band_number) float64 288B 10.0 15.0 20.0 ... 103.2 105.0
 ```
 
 ### Euvt2021 usage example
 
 This class contains two methods for calculating the spectrum:
 - get_spectral_bands() for calculating the spectrum in a wavelength interval;
-- get_spectral_lines() for calculating the spectrum for an individual wavelength.
+- get_spectral_lines() for calculating the spectrum for an individual wavelength;
+- predict() for calculating the spectrum for a mixed set of intervals and lines 
+(this set is given in \[Nusinov et al\] in Table 1).
 
 The steps of work are similar to the steps described for the Fuvt2021 class. 
 
@@ -254,3 +269,32 @@ Coordinates:
 
 This method combines the get_spectral_bands() and get_spectral_lines() methods. The method returns a tuple (bands, lines), 
 the first element is the flux in intervals, the second is the flux in individual lines. 
+
+4. predict()
+
+This method calculates EUV spectrum from mixed dataset (containing intervals and lines together).
+
+```
+# importing a package with the alias p
+import pynusinov as p
+# creating an instance of the Euvt2021 class
+ex = p.Euvt2021()
+# calculate the spectrum values at N_La = 3.31 lac unit using predict()
+spectra = ex.predict(3.31)
+# output the resulting EUV-spectra
+print(spectra['euv_flux_spectra'])
+
+
+<xarray.DataArray 'euv_flux_spectra' (band_center: 36, lac: 1)> Size: 288B
+array([[ 2.52122700e+12],
+       [ 2.59186240e+12],
+...
+       [ 5.22986620e+12],
+       [ 9.57620734e+13]])
+Coordinates:
+  * lac          (lac) float64 8B 3.31
+  * band_center  (band_center) float64 288B 7.5 12.5 17.5 ... 102.6 103.2 102.5
+```
+
+Just like the get_spectral_bands and get_spectral_lines methods, the predict method supports passing the lac 
+parameter as a list.
