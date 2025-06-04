@@ -14,7 +14,7 @@ def get_nusinov_fuvt_coeffs():
 
 def get_nusinov_euvt_coeffs():
     return (read_coeffs('euvt_bands_coeffs.nc').copy(), read_coeffs('euvt_lines_coeffs.nc').copy(),
-            read_coeffs('euvt_coeffs_full.nc').copy())
+            read_coeffs('euvt_full_coeffs.nc').copy())
 
 
 def convert_lac_to_lat(lac):
