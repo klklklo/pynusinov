@@ -13,14 +13,17 @@ class Fuvt2021:
         self._coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64),
                                   np.array(self._dataset['B1'], dtype=np.float64))).transpose()
 
-    def _get_nlam(self, lac):
-        '''
-        A method for preparing data. It creates a two-dimensional array, the first column of which is filled with ones,
-        the second with the values of the fluxes in the Lyman-alpha line.
-        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
-        :return: numpy-array for model calculation.
-        '''
+    def _check_types(self, lac):
+        if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
+            if isinstance(lac, (list, np.ndarray)):
+                if not all([isinstance(x, (float, int, np.integer,)) for x in lac]):
+                    raise TypeError(
+                        f'Only float and int types are allowed in array.')
+        else:
+            raise TypeError(f'Only float, int, list and np.ndarray types are allowed. f107 was {type(lac)}')
+        return True
 
+    def _get_nlam(self, lac):
         try:
             if isinstance(lac, float) or isinstance(lac, int):
                 return np.array([1., lac], dtype=np.float64).reshape(1, 2)
@@ -32,14 +35,9 @@ class Fuvt2021:
         return np.dot(matrix_a, vector_x) * 1.e15
 
     def get_spectral_bands(self, lac):
-        '''
-        Model calculation method. Returns the values of radiation fluxes in all intervals
-        of the spectrum of the interval 115-242 nm.
-        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
-        :return: xarray Dataset [fuv_flux_spectra, lband, uband].
-        '''
+        if self._check_types(lac):
+            nlam = self._get_nlam(lac)
 
-        nlam = self._get_nlam(lac)
         res = self._predict(self._coeffs, nlam.T)
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', np.arange(115, 242, 1)),
@@ -55,13 +53,6 @@ class Fuvt2021:
                                  'uband': 'upper boundary of wavelength interval'})
 
     def get_spectra(self, lac):
-        '''
-        Model calculation method. Used to unify the interface with Euvt2021 class. Calls the
-        get_spectral_bands() method with the parameters passed to get_spectra().
-        :param lac: single value or list of flux values in lac unit (1 lac = 1 * 10^15 m^-2 * s^-1).
-        :return: xarray Dataset [euv_flux_spectra, lband, uband], xarray Dataset [euv_flux_spectra, line_lambda].
-        '''
-
         return self.get_spectral_bands(lac)
 
     def predict(self, lac):
