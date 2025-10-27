@@ -8,8 +8,10 @@ Using this parameter allows you to calculate solar radiation fluxes for any peri
 
 If you use pynusinov or Nusinov's EUV/FUV models directly or indirectly, please, cite in your research the following paper:
 
-1. Nusinov, A.A., Kazachevskaya, T.V., Katyushina, V.V. - Solar Extreme and Far Ultraviolet Radiation Modeling for Aeronomic
+1. Nusinov, A.A., Kazachevskaya, T.V., Katyushina, V.V. Solar Extreme and Far Ultraviolet Radiation Modeling for Aeronomic
 Calculations. Remote Sens. 2021, 13, 1454. https://doi.org/10.3390/rs13081454
+2. Prokhorov, B.E., Zolotov, O.V., Romanovskaya, Yu.V. et al. pyNusinov: A Python3 software package for 
+Solar Extreme and Far Ultraviolet radiation modeling. Software Impacts. 2025, 26, 100792. https://doi.org/10.1016/j.simpa.2025.100792
 
 ## User's guide
 
