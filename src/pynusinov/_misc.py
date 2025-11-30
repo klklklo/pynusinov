@@ -8,12 +8,21 @@ def read_coeffs(file):
     return xr.open_dataset(files('pynusinov._coeffs').joinpath(file))
 
 
-def get_nusinov_fuvt_coeffs():
-    return read_coeffs('fuvt_bands_coeffs.nc').copy()
+def get_xuv1986_coeffs():
+    return read_coeffs('xuv1986_coeffs.nc').copy()
 
 
-def get_nusinov_euvt_coeffs():
-    return read_coeffs('euvt_bands_coeffs.nc').copy(), read_coeffs('euvt_lines_coeffs.nc').copy()
+def get_fuvt2019_coeffs():
+    return read_coeffs('fuvt2019_bands_coeffs.nc').copy()
+
+
+def get_fuvt2021_coeffs():
+    return read_coeffs('fuvt2021_bands_coeffs.nc').copy()
+
+
+def get_euvt2021_coeffs():
+    return (read_coeffs('euvt2021_bands_coeffs.nc').copy(), read_coeffs('euvt2021_lines_coeffs.nc').copy(),
+            read_coeffs('euvt2021_full_coeffs.nc').copy())
 
 
 def convert_lac_to_lat(lac):
