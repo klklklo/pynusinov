@@ -14,7 +14,7 @@ description = "Python3 implementation of models of the ultraviolet radiation spe
 readme = "README.md"
 license = {file = "LICENSE"}
 
-keywords = ["Solar radiation model", "EUV", "FUV"]
+keywords = ["Solar radiation model", "XUV", "EUV", "FUV"]
 
 requires-python = ">=3.7"
 classifiers = [

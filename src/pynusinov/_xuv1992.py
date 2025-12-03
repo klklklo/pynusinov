@@ -3,13 +3,13 @@ import xarray as xr
 import pynusinov._misc as _m
 
 
-class Xuv1986:
+class Xuv1992:
     '''
-    1986 XUV model class.
+    1992 XUV model class.
     '''
 
     def __init__(self):
-        self._xuv_dataset = _m.get_xuv1986_coeffs()
+        self._xuv_dataset = _m.get_xuv1992_coeffs()
 
     def get_spectral_bands(self, _f107):
         f107 = 0.29 * np.array(_f107).reshape(-1, ) - 18

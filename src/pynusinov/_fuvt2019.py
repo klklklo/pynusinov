@@ -10,8 +10,6 @@ class Fuvt2019:
 
     def __init__(self):
         self._dataset = _m.get_fuvt2019_coeffs()
-        self._coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64),
-                                  np.array(self._dataset['B1'], dtype=np.float64))).transpose()
 
     def _check_types(self, lac):
         if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
@@ -35,7 +33,10 @@ class Fuvt2019:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        res = self._predict(self._coeffs, nlam.T)
+        coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64),
+                                  np.array(self._dataset['B1'], dtype=np.float64))).transpose()
+
+        res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', np.arange(115, 242, 1)),
                                      'uband': ('band_number', np.arange(116, 243, 1))},

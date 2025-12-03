@@ -9,14 +9,7 @@ class Euvt2021:
     '''
 
     def __init__(self):
-        self._bands_dataset, self._lines_dataset, self._full_dataset = _m.get_euvt_coeffs()
-
-        self._full_coeffs = np.vstack((np.array(self._full_dataset['B0'], dtype=np.float64),
-                                        np.array(self._full_dataset['B1'], dtype=np.float64))).transpose()
-        self._bands_coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
-                                        np.array(self._bands_dataset['B1'], dtype=np.float64))).transpose()
-        self._lines_coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
-                                        np.array(self._lines_dataset['B1'], dtype=np.float64))).transpose()
+        self._bands_dataset, self._lines_dataset, self._full_dataset = _m.get_euvt2021_coeffs()
 
     def _check_types(self, lac):
         if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
@@ -40,7 +33,10 @@ class Euvt2021:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        res = self._predict(self._lines_coeffs, nlam.T)
+        coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
+                                        np.array(self._lines_dataset['B1'], dtype=np.float64))).transpose()
+
+        res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'lac'), res),
                                      'wavelength': ('line_number', self._lines_dataset['lambda'].values)},
                           coords={'lac': nlam[:, 0],
@@ -51,7 +47,10 @@ class Euvt2021:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        res = self._predict(self._bands_coeffs, nlam.T)
+        coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
+                                        np.array(self._bands_dataset['B1'], dtype=np.float64))).transpose()
+
+        res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', self._bands_dataset['lband'].values),
                                      'uband': ('band_number', self._bands_dataset['uband'].values)},
@@ -66,7 +65,10 @@ class Euvt2021:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        res = self._predict(self._full_coeffs, nlam.T)
+        coeffs = np.vstack((np.array(self._full_dataset['B0'], dtype=np.float64),
+                                        np.array(self._full_dataset['B1'], dtype=np.float64))).transpose()
+
+        res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
                                      'lband': ('band_number', self._full_dataset['lband'].values),
                                      'uband': ('band_number', self._full_dataset['uband'].values)},
