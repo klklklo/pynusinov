@@ -34,14 +34,14 @@ class Fuvt2021:
             nlam = self._get_nlam(lac)
 
         coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64),
-                                  np.array(self._dataset['B1'], dtype=np.float64))).transpose()
+                                  np.array(self._dataset['B1'], dtype=np.float64))).T
 
         res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
-                                     'lband': ('band_number', np.arange(115, 242, 1)),
-                                     'uband': ('band_number', np.arange(116, 243, 1))},
+                                     'lband': ('band_number', self._dataset['lband'].data),
+                                     'uband': ('band_number', self._dataset['uband'].data)},
                           coords={'lac': nlam[:, 1],
-                                  'band_center': np.arange(115.5, 242.5, 1),
+                                  'band_center': self._dataset['center'].data,
                                   'band_number': np.arange(127)})
 
     def get_spectra(self, lac):

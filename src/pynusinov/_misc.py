@@ -8,6 +8,10 @@ def read_coeffs(file):
     return xr.open_dataset(files('pynusinov._coeffs').joinpath(file))
 
 
+def get_euvn1984_coeffs():
+    return (read_coeffs('euvn1984_bands_coeffs.nc').copy(), read_coeffs('euvn1984_lines_coeffs.nc').copy(),
+            read_coeffs('euvn1984_full_coeffs.nc').copy())
+
 def get_xuv1992_coeffs():
     return read_coeffs('xuv1992_coeffs.nc').copy()
 
