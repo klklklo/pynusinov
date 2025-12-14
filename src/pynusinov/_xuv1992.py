@@ -16,7 +16,7 @@ class Xuv1992:
         c = 299792458
         l = 1.4e-9
 
-        i082 = (0.29 * np.array(_f107).reshape(-1, ) - 18) * 1e-6 / (h*c/l)
+        i082 = (0.29 * np.array(_f107).reshape(-1, ) - 18) * 1e-6 / (h*c)
 
         i082 = (0.29 * np.array(_f107).reshape(-1, ) - 18)
 
@@ -28,10 +28,10 @@ class Xuv1992:
             X = pow(f / 1.35, d)
             spectra[:, i] = (spectra[:, i] * X)
 
-        return xr.Dataset(data_vars={'xuv_flux_spectra': (('band_center', 'f107'), spectra),
+        return xr.Dataset(data_vars={'xuv_flux_spectra': (('band_center', 'hei'), spectra),
                                      'lband': ('band_number', self._xuv_dataset['lband'].data),
                                      'uband': ('band_number', self._xuv_dataset['uband'].data)},
-                          coords={'f107': i082,
+                          coords={'hei': i082,
                                   'band_center': self._xuv_dataset['center'].data,
                                   'band_number': np.arange(13)})
 
