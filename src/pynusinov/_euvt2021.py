@@ -9,7 +9,7 @@ class Euvt2021:
     '''
 
     def __init__(self):
-        self._bands_dataset, self._lines_dataset, self._full_dataset = _m.get_euvt2021_coeffs()
+        self._bands_coeffs, self._lines_coeffs, self._full_coeffs = _m.get_euvt2021_coeffs()
 
     def _check_types(self, lac):
         if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
@@ -33,29 +33,29 @@ class Euvt2021:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
-                                        np.array(self._lines_dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._lines_coeffs['B0'], dtype=np.float64),
+                            np.array(self._lines_coeffs['B1'], dtype=np.float64))).T
 
         res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'lac'), res),
-                                     'wavelength': ('line_number', self._lines_dataset['lambda'].data)},
+                                     'wavelength': ('line_number', self._lines_coeffs['lambda'].data)},
                           coords={'lac': nlam[:, 0],
-                                  'line_wavelength': self._lines_dataset['lambda'].data,
+                                  'line_wavelength': self._lines_coeffs['lambda'].data,
                                   'line_number': np.arange(16)})
 
     def get_spectral_bands(self, lac):
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
-                                        np.array(self._bands_dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._bands_coeffs['B0'], dtype=np.float64),
+                            np.array(self._bands_coeffs['B1'], dtype=np.float64))).T
 
         res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
-                                     'lband': ('band_number', self._bands_dataset['lband'].data),
-                                     'uband': ('band_number', self._bands_dataset['uband'].data)},
+                                     'lband': ('band_number', self._bands_coeffs['lband'].data),
+                                     'uband': ('band_number', self._bands_coeffs['uband'].data)},
                           coords={'lac': nlam[:, 0],
-                                  'band_center': self._bands_dataset['center'].data,
+                                  'band_center': self._bands_coeffs['center'].data,
                                   'band_number': np.arange(20)})
 
     def get_spectra(self, lac):
@@ -65,14 +65,14 @@ class Euvt2021:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        coeffs = np.vstack((np.array(self._full_dataset['B0'], dtype=np.float64),
-                                        np.array(self._full_dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._full_coeffs['B0'], dtype=np.float64),
+                            np.array(self._full_coeffs['B1'], dtype=np.float64))).T
 
         res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'lac'), res),
-                                     'lband': ('band_number', self._full_dataset['lband'].values),
-                                     'uband': ('band_number', self._full_dataset['uband'].values)},
+                                     'lband': ('band_number', self._full_coeffs['lband'].values),
+                                     'uband': ('band_number', self._full_coeffs['uband'].values)},
                           coords={'lac': nlam[:, 0],
-                                  'band_center': self._full_dataset['center'].values,
+                                  'band_center': self._full_coeffs['center'].values,
                                   'band_number': np.arange(36)})
     

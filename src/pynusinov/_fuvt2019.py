@@ -9,7 +9,7 @@ class Fuvt2019:
     '''
 
     def __init__(self):
-        self._dataset = _m.get_fuvt2019_coeffs()
+        self._bands_coeffs = _m.get_fuvt2019_coeffs()
 
     def _check_types(self, lac):
         if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
@@ -33,15 +33,15 @@ class Fuvt2019:
         if self._check_types(lac):
             nlam = self._get_nlam(lac)
 
-        coeffs = np.vstack((np.array(self._dataset['B0'], dtype=np.float64),
-                                  np.array(self._dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._bands_coeffs['B0'], dtype=np.float64),
+                            np.array(self._bands_coeffs['B1'], dtype=np.float64))).T
 
         res = self._predict(coeffs, nlam.T)
         return xr.Dataset(data_vars={'fuv_flux_spectra': (('band_center', 'lac'), res),
-                                     'lband': ('band_number', self._dataset['lband'].data),
-                                     'uband': ('band_number', self._dataset['uband'].data)},
+                                     'lband': ('band_number', self._bands_coeffs['lband'].data),
+                                     'uband': ('band_number', self._bands_coeffs['uband'].data)},
                           coords={'lac': nlam[:, 1],
-                                  'band_center': self._dataset['center'].data,
+                                  'band_center': self._bands_coeffs['center'].data,
                                   'band_number': np.arange(127)})
 
     def get_spectra(self, lac):
