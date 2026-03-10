@@ -38,52 +38,52 @@ class Euvn1992:
             return np.array([hei, hei * hei], dtype=np.float64).reshape(1, 2)
         return np.vstack([np.array([x, x * x]) for x in hei], dtype=np.float64)
 
-    def get_spectral_bands(self, _hei):
-        if self._check_types(_hei):
-            hei = self._prepare_X(_hei)
+    def get_spectral_bands(self, hei):
+        if self._check_types(hei):
+            _hei = self._prepare_X(hei)
 
         coeffs = np.vstack((np.array(self._bands_coeffs['B0'], dtype=np.float64),
                             np.array(self._bands_coeffs['B1'], dtype=np.float64))).T
 
-        spectra = np.dot(coeffs, hei.T) * 1e13
+        spectra = np.dot(coeffs, _hei.T) * 1e13
 
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'hei'), spectra),
                                      'lband': ('band_number', self._bands_coeffs['lband'].data),
                                      'uband': ('band_number', self._bands_coeffs['uband'].data)},
-                          coords={'hei': hei[:, 0],
+                          coords={'hei': _hei[:, 0],
                                   'band_center': self._bands_coeffs['center'].data,
                                   'band_number': np.arange(19)})
 
-    def get_spectral_lines(self, _hei):
-        if self._check_types(_hei):
-            hei = self._prepare_X(_hei)
+    def get_spectral_lines(self, hei):
+        if self._check_types(hei):
+            _hei = self._prepare_X(hei)
 
         coeffs = np.vstack((np.array(self._lines_coeffs['B0'], dtype=np.float64),
                             np.array(self._lines_coeffs['B1'], dtype=np.float64))).T
 
-        spectra = np.dot(coeffs, hei.T) * 1e13
+        spectra = np.dot(coeffs, _hei.T) * 1e13
 
         return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'hei'), spectra),
                                      'wavelength': ('line_number', self._lines_coeffs['lambda'].data)},
-                          coords={'hei': hei[:, 0],
+                          coords={'hei': _hei[:, 0],
                                   'line_wavelength': self._lines_coeffs['lambda'].data,
                                   'line_number': np.arange(16)})
 
-    def get_spectra(self, _hei):
-        return self.get_spectral_bands(_hei), self.get_spectral_lines(_hei)
+    def get_spectra(self, hei):
+        return self.get_spectral_bands(hei), self.get_spectral_lines(hei)
 
-    def predict(self, _hei):
-        if self._check_types(_hei):
-            hei = self._prepare_X(_hei)
+    def predict(self, hei):
+        if self._check_types(hei):
+            _hei = self._prepare_X(hei)
 
         coeffs = np.vstack((np.array(self._full_coeffs['B0'], dtype=np.float64),
                             np.array(self._full_coeffs['B1'], dtype=np.float64))).T
 
-        spectra = np.dot(coeffs, hei.T) * 1e13
+        spectra = np.dot(coeffs, _hei.T) * 1e13
 
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'hei'), spectra),
                                      'lband': ('band_number', self._full_coeffs['lband'].data),
                                      'uband': ('band_number', self._full_coeffs['uband'].data)},
-                          coords={'hei': hei[:, 0],
+                          coords={'hei': _hei[:, 0],
                                   'band_center': self._full_coeffs['center'].data,
                                   'band_number': np.arange(35)})

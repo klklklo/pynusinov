@@ -11,11 +11,11 @@ class Xuvn1992:
     def __init__(self):
         self._bands_coeffs = _m.get_xuvn1992_coeffs()
 
-    def get_i0820(self, _f107):
+    def get_i0820(self, f107):
         h = 6.62607015e-34
         c = 299792458
         l = 1.4e-9
-        return (0.29 * np.array(_f107).reshape(-1, ) - 18) / (h*c / l) * 1.e-17
+        return (0.29 * np.array(f107).reshape(-1, ) - 18) / (h*c / l) * 1.e-17
 
     def get_spectral_bands(self, i082):
         i082 = np.array(i082).reshape(-1,)
