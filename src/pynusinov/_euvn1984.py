@@ -11,14 +11,10 @@ class Euvn1984:
     def __init__(self):
         self._bands_dataset, self._lines_dataset, self._full_dataset = _m.get_euvn1984_coeffs()
 
-    class F107toHeI:
+    class HeI:
         @staticmethod
-        def get_Fb(t):
-            return 63 + 482 * np.power(np.sin(np.pi * t / 10.2), 3.7) * np.exp(-5.2 * t / 10.2)
-
-        @classmethod
-        def get_hei(cls, f107, t):
-            fb = cls.get_Fb(t)
+        def predict(f107, t):
+            fb = 63 + 482 * np.power(np.sin(np.pi * t / 10.2), 3.7) * np.exp(-5.2 * t / 10.2)
             return 0.725 + 0.160 * np.power(fb - 60, 2 / 3) + 0.0592 * np.power(f107 - fb, 2 / 3)
 
     def _check_types(self, lac):

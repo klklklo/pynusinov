@@ -11,20 +11,14 @@ class Euvn1992:
     def __init__(self):
         self._bands_coeffs, self._lines_coeffs, self._full_coeffs = _m.get_euvn1992_coeffs()
 
-    class F107toHeI:
-
+    class HeI:
         @staticmethod
-        def get_Fb(t):
+        def predict(f107, t):
             a = [82.1, -19.6, 1.778, 2.59, -2.33]
             b = [0, 10.55, -7.956, 3.104, -0.925]
             fb = 0
             for i in range(5):
                 fb += a[i] * np.cos(2 * np.pi * i * t / 10.2) + b[i] * np.sin(2 * np.pi * i * t / 10.2)
-            return fb
-
-        @classmethod
-        def get_hei(cls, f107, t):
-            fb = cls.get_Fb(t)
             return 1.38 + 0.111 * np.power(fb - 60, 2 / 3) + 0.0583 * np.power(f107 - fb, 2 / 3)
 
     def _check_types(self, hei):
