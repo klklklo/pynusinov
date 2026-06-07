@@ -12,13 +12,10 @@ class Euvt2021:
         self._bands_coeffs, self._lines_coeffs, self._full_coeffs = _m.get_euvt2021_coeffs()
 
     def _check_types(self, lac):
-        if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
-            if isinstance(lac, (list, np.ndarray)):
-                if not all([isinstance(x, (float, int, np.integer,)) for x in lac]):
-                    raise TypeError(
-                        f'Only float and int types are allowed in array.')
-        else:
-            raise TypeError(f'Only float, int, list and np.ndarray types are allowed. lac was {type(lac)}')
+        lac = np.array(lac).reshape(-1, )
+        for l in lac:
+            if not isinstance(l, (int, float, np.integer)):
+                raise TypeError(f'lac must be int or float, but it was {type(l).__name__}')
         return True
 
     def _get_nlam(self, lac):

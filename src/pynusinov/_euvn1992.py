@@ -14,21 +14,41 @@ class Euvn1992:
     class HeI:
         @staticmethod
         def predict(f107, t):
+            f107 = np.array(f107).reshape(-1, )
+            t = np.array(t).reshape(-1, )
+
+            for f in f107:
+                if not isinstance(f, (int, float, np.integer)):
+                    raise TypeError(f'f107 must be int or float, but it was {type(f).__name__}')
+
+            for _t in t:
+                if not isinstance(_t, (int, float, np.integer)):
+                    raise TypeError(f't must be int or float, but it was {type(_t).__name__}')
+
             a = [82.1, -19.6, 1.778, 2.59, -2.33]
             b = [0, 10.55, -7.956, 3.104, -0.925]
             fb = 0
             for i in range(5):
                 fb += a[i] * np.cos(2 * np.pi * i * t / 10.2) + b[i] * np.sin(2 * np.pi * i * t / 10.2)
-            return 1.38 + 0.111 * np.power(fb - 60, 2 / 3) + 0.0583 * np.power(f107 - fb, 2 / 3)
+            hei = 1.38 + 0.111 * np.power(fb - 60, 2 / 3) + 0.0583 * np.power(f107 - fb, 2 / 3)
+
+            return xr.Dataset(data_vars={'hei': ('_hei', hei),
+                                             'f107': ('_f107', f107),
+                                             'time': ('_time', t)},
+                                  coords={'_hei': np.arange(len(hei)),
+                                          '_f107': np.arange(len(f107)),
+                                          '_time': np.arange(len(t))},
+                                  attrs={
+                                      'Name': 'Calсulate He I values from daily F10.7 (in s.f.u.) and time (in years)',
+                                      'He I units': '10^9 photons · cm^-2 · s^-1',
+                                      'F10.7 units': 's.f.u., (1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1)',
+                                      'Time units': 'The time from the moment the 20 or 21 solar cycle begins (in years)'})
 
     def _check_types(self, hei):
-        if isinstance(hei, (float, int, np.integer, list, np.ndarray)):
-            if isinstance(hei, (list, np.ndarray)):
-                if not all([isinstance(x, (float, int, np.integer,)) for x in hei]):
-                    raise TypeError(
-                        f'Only float and int types are allowed in array.')
-        else:
-            raise TypeError(f'Only float, int, list and np.ndarray types are allowed. hei was {type(hei)}')
+        hei = np.array(hei).reshape(-1, )
+        for h in hei:
+            if not isinstance(h, (int, float, np.integer)):
+                raise TypeError(f'hei must be int or float, but it was {type(h).__name__}')
         return True
 
     def _prepare_X(self, hei):

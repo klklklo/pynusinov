@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import xarray as xr
 import pynusinov._misc as _m
 
@@ -14,17 +15,35 @@ class Euvn1984:
     class HeI:
         @staticmethod
         def predict(f107, t):
+            f107 = np.array(f107).reshape(-1, )
+            t = np.array(t).reshape(-1, )
+
+            for f in f107:
+                if not isinstance(f, (int, float, np.integer)):
+                    raise TypeError(f'f107 must be int or float, but it was {type(f).__name__}')
+
+            for _t in t:
+                if not isinstance(_t, (int, float, np.integer)):
+                    raise TypeError(f't must be int or float, but it was {type(_t).__name__}')
+
             fb = 63 + 482 * np.power(np.sin(np.pi * t / 10.2), 3.7) * np.exp(-5.2 * t / 10.2)
-            return 0.725 + 0.160 * np.power(fb - 60, 2 / 3) + 0.0592 * np.power(f107 - fb, 2 / 3)
+            hei = np.array(0.725 + 0.160 * np.power(fb - 60, 2 / 3) + 0.0592 * np.power(f107 - fb, 2 / 3))
+            return xr.Dataset(data_vars={'hei': ('_hei', hei),
+                                             'f107': ('_f107', f107),
+                                             'time': ('_time', t)},
+                                  coords={'_hei': np.arange(len(hei)),
+                                          '_f107': np.arange(len(f107)),
+                                          '_time': np.arange(len(t))},
+                                  attrs={'Name': 'Calсulate He I values from daily F10.7 (in s.f.u.) and time (in years)',
+                                         'He I units': '10^9 photons · cm^-2 · s^-1',
+                                         'F10.7 units': 's.f.u., (1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1)',
+                                         'Time units': 'The time from the moment the 20 or 21 solar cycle begins (in years)'})
 
     def _check_types(self, lac):
-        if isinstance(lac, (float, int, np.integer, list, np.ndarray)):
-            if isinstance(lac, (list, np.ndarray)):
-                if not all([isinstance(x, (float, int, np.integer,)) for x in lac]):
-                    raise TypeError(
-                        f'Only float and int types are allowed in array.')
-        else:
-            raise TypeError(f'Only float, int, list and np.ndarray types are allowed. lac was {type(lac)}')
+        lac = np.array(lac).reshape(-1, )
+        for l in lac:
+            if not isinstance(l, (int, float, np.integer)):
+                raise TypeError(f'lac must be int or float, but it was {type(l).__name__}')
         return True
 
     def _prepare_X(self, hei):

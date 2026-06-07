@@ -14,13 +14,27 @@ class Xuvn1992:
     class I082:
         @staticmethod
         def predict(f107):
-            h = 6.62607015e-34
-            c = 299792458
-            l = 1.4e-9
-            return (0.29 * np.array(f107).reshape(-1, ) - 18) / (h * c / l) * 1.e-17
+            f107 = np.array(f107).reshape(-1, )
+            for f in f107:
+                if not isinstance(f, (int, float, np.integer)):
+                    raise TypeError(f'f107 must be int or float, but it was {type(f).__name__}')
+
+            i082 = (0.29 * f107 - 18) * 1e-6
+            return xr.Dataset(data_vars={'i082': ('_i082', i082),
+                                         'f107': ('_f107', f107)},
+                              coords={'_i082': np.arange(len(i082)),
+                                      '_f107': np.arange(len(f107))},
+                              attrs={'Name': 'Calсulate I 0.8-2.0 values from daily F10.7 (in s.f.u.)',
+                                     'I 0.8-2.0 units': 'W · m^-2',
+                                     'F10.7 units': 's.f.u., (1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1)'})
 
     def get_spectral_bands(self, i082):
         i082 = np.array(i082).reshape(-1,)
+
+        for i in i082:
+            if not isinstance(i, (int, float, np.integer)):
+                raise TypeError(f'i082 must be int or float, but it was {type(i).__name__}')
+
         d = 1.56 / self._bands_coeffs['uband'].data + 0.22
 
         spectra = np.repeat(self._bands_coeffs['I'].data.reshape(-1, 1), i082.size, axis=1)
