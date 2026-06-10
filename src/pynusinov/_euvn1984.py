@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 import xarray as xr
 import pynusinov._misc as _m
 
@@ -83,7 +82,7 @@ class Euvn1984:
                                   'line_number': np.arange(16)})
 
     def get_spectra(self, _hei):
-        return (self.get_spectral_bands(_hei), self.get_spectral_lines(_hei))
+        return self.get_spectral_bands(_hei), self.get_spectral_lines(_hei)
 
     def predict(self, _hei):
         if self._check_types(_hei):
