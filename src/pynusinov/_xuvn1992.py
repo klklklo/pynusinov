@@ -19,7 +19,7 @@ class Xuvn1992:
                 if not isinstance(f, (int, float, np.integer)):
                     raise TypeError(f'f107 must be int or float, but it was {type(f).__name__}')
 
-            i082 = (0.29 * f107 - 18) * 1e-6
+            i082 = (0.29 * np.array(f107).reshape(-1, ) - 18) * 1.e-6
             return xr.Dataset(data_vars={'i082': ('_i082', i082),
                                          'f107': ('_f107', f107)},
                               coords={'_i082': np.arange(len(i082)),
@@ -28,12 +28,23 @@ class Xuvn1992:
                                      'I 0.8-2.0 units': 'W · m^-2',
                                      'F10.7 units': 's.f.u., (1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1)'})
 
-    def get_spectral_bands(self, i082):
+    @staticmethod
+    def scale_si_input(input):
+        return input * 1.e4
+
+    @staticmethod
+    def unscale(input):
+        return input * 1.e-4
+
+    def get_spectral_bands(self, i082, scale_si_input=False):
         i082 = np.array(i082).reshape(-1,)
 
         for i in i082:
             if not isinstance(i, (int, float, np.integer)):
                 raise TypeError(f'i082 must be int or float, but it was {type(i).__name__}')
+
+        if scale_si_input:
+            i082 = self.scale_si_input(i082)
 
         d = 1.56 / self._bands_coeffs['uband'].data + 0.22
 
@@ -50,8 +61,8 @@ class Xuvn1992:
                                   'band_center': self._bands_coeffs['center'].data,
                                   'band_number': np.arange(13)})
 
-    def get_spectra(self, i082):
-        return self.get_spectral_bands(i082)
+    def get_spectra(self, i082, scale_si_input=False):
+        return self.get_spectral_bands(i082, scale_si_input)
 
-    def predict(self, i082):
-        return self.get_spectral_bands(i082)
+    def predict(self, i082, scale_si_input=False):
+        return self.get_spectral_bands(i082, scale_si_input)
