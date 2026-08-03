@@ -11,7 +11,7 @@ class Euvn1992:
     def __init__(self):
         self._bands_coeffs, self._lines_coeffs, self._full_coeffs = _m.get_euvn1992_coeffs()
 
-    class HeI:
+    class HeI1992:
         @staticmethod
         def predict(f107, t):
             f107 = np.array(f107).reshape(-1, )
@@ -45,12 +45,12 @@ class Euvn1992:
                                       'Time units': 'The time from the moment the 20 or 21 solar cycle begins (in years)'})
 
     @staticmethod
-    def scale_si_input(input):
-        return input * 1.e4
+    def scale(si_input):
+        return si_input * 1.e4
 
     @staticmethod
-    def unscale(input):
-        return input * 1.e-4
+    def unscale(scaled_input):
+        return scaled_input * 1.e-4
 
     def _check_types(self, hei):
         hei = np.array(hei).reshape(-1, )
@@ -72,7 +72,7 @@ class Euvn1992:
                             np.array(self._bands_coeffs['B1'], dtype=np.float64))).T
 
         if scale_si_input:
-            hei = self.scale_si_input(hei)
+            hei = self.scale(hei)
 
         spectra = np.dot(coeffs, hei.T) * 1.e13
 
@@ -92,7 +92,7 @@ class Euvn1992:
                             np.array(self._lines_coeffs['B1'], dtype=np.float64))).T
 
         if scale_si_input:
-            hei = self.scale_si_input(hei)
+            hei = self.scale(hei)
 
         spectra = np.dot(coeffs, hei.T) * 1.e13
 
@@ -113,7 +113,7 @@ class Euvn1992:
                             np.array(self._full_coeffs['B1'], dtype=np.float64))).T
 
         if scale_si_input:
-            hei = self.scale_si_input(hei)
+            hei = self.scale(hei)
 
         spectra = np.dot(coeffs, hei.T) * 1.e13
 

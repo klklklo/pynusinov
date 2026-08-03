@@ -11,6 +11,14 @@ class Fuvt2021:
     def __init__(self):
         self._bands_coeffs = _m.get_fuvt2021_coeffs()
 
+    @staticmethod
+    def scale(si_input):
+        return si_input * 1.e15
+
+    @staticmethod
+    def unscale(scaled_input):
+        return scaled_input * 1.e-15
+
     def _check_types(self, lac):
         lac = np.array(lac).reshape(-1, )
         for l in lac:
