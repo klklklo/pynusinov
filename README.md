@@ -5,10 +5,10 @@ Professor, Dr. Anatoly Abramovich Nusinov.
 
 The following models are provided:
 * EUVT2021, 5-105 nm, 20 bands + 16 lines, \[Nusinvov et al., 2021\]
-* FUVT2021, 115-242 nm, 127 intervals, \[Nusinvov et al., 2021\]
-* FUVT2019, 115-242 nm, 127 intervals, \[Nusinvov et al., 2019\]
-* EUVN1992, 10-105 nm, 19 intervals + 16 lines, \[Nusinvov et al., 1992\]
-* XUVN1992, 0.1-10 nm, 13 intervals, \[Nusinvov et al., 1992\]
+* FUVT2021, 115-242 nm, 127 bands, \[Nusinvov et al., 2021\]
+* FUVT2019, 115-242 nm, 127 bands, \[Nusinvov et al., 2019\]
+* EUVN1992, 10-105 nm, 19 bands + 16 lines, \[Nusinvov et al., 1992\]
+* XUVN1992, 0.1-10 nm, 13 bands, \[Nusinvov et al., 1992\]
 
 
 If you use pyNusinov package, please, cite the package or Nusinov's EUV/FUV models directly or indirectly, please, 
@@ -21,7 +21,7 @@ solar extreme and far ultraviolet radiation modeling. Software Impacts. 2026, 28
 and an appropriate model:
 * EUVT2021 and FUVT2021 <br>
 Nusinov, A.A., Kazachevskaya, T.V., Katyushina, V.V. Solar Extreme and Far Ultraviolet Radiation Modeling 
-for Aeronomic Calculations. Remote Sens. 2021, 13, 1454. https://doi.org/10.3390/rs13081454.
+for Aeronomic Calculations. Remote Sens. 2021, 13, 1454. https://dx.doi.org/10.3390/rs13081454.
 * FUVT2019 <br>
 Nusinov, A.A., Kazachevskaya, T.V., Katyushina V.V. A Model of Fluxes of Solar
 Extreme Ultraviolet Irradiance. Geomagn. Aeron. 2019, 59, 265–271. http://dx.doi.org/10.1134/S0016793219030095.
