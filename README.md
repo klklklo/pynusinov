@@ -9,6 +9,7 @@ The following models are provided:
 * FUVT2019, 115-242 nm, 127 bands, \[Nusinvov et al., 2019\]
 * EUVN1992, 10-105 nm, 19 bands + 16 lines, \[Nusinvov et al., 1992\]
 * XUVN1992, 0.1-10 nm, 13 bands, \[Nusinvov et al., 1992\]
+* EUVN1984, 10-105 nm, 19 bands + 16 lines, \[Nusinvov et al., 1984\]
 
 
 If you use pyNusinov package, please, cite the package or Nusinov's EUV/FUV models directly or indirectly, please, 
@@ -29,3 +30,6 @@ Extreme Ultraviolet Irradiance. Geomagn. Aeron. 2019, 59, 265–271. http://dx.d
 Nusinov, A.A. Models for prediction of EUV- and X-ray solar radiation based on 10.7-cm radio emission, 
 in Proc. Workshop on Solar Electromagnetic Radiation for Solar Cycle 22, Boulder, Colo. Edited By R. F. Donnely, pp. 354–359, NOAA ERL,
 Boulder, Colo, USA, 1992. https://adsabs.harvard.edu/full/1992sers.conf.354N.
+* EUVN1984 <br>
+Bruevich, E.A., Nusinov, A.A. Spectrum of short-wavelength radiation for aeronomic calculations at various solar 
+activity levels. Geomagn. Aeron. 1984, 24(4), 581-585 (in Russian).

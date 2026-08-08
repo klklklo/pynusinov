@@ -9,9 +9,11 @@ from importlib_resources import files
 def read_coeffs(file):
     return xr.open_dataset(files('pynusinov._coeffs').joinpath(file))
 
+
 def get_euvn1984_coeffs():
     return (read_coeffs('euvn1984_bands_coeffs.nc').copy(), read_coeffs('euvn1984_lines_coeffs.nc').copy(),
             read_coeffs('euvn1984_full_coeffs.nc').copy())
+
 
 def get_xuvn1992_coeffs():
     return read_coeffs('xuvn1992_coeffs.nc').copy()
@@ -41,3 +43,11 @@ def convert_lac_to_lat(lac):
 
 def convert_lat_to_lac(lat):
     return lat['euv_flux_spectra'] / 0.865
+
+
+def photons_per_cm2_per_s_to_photons_per_m2_per_s(flux):
+    return flux * 1.e4
+
+
+def photons_per_m2_per_s_to_photons_per_cm2_per_s(flux):
+    return flux * 1.e-4

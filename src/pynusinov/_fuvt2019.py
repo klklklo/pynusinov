@@ -13,11 +13,11 @@ class Fuvt2019:
 
     @staticmethod
     def scale(si_input):
-        return si_input * 1.e15
+        return si_input * 1.e-15
 
     @staticmethod
-    def unscale(scaled_input):
-        return scaled_input * 1.e-15
+    def unscale_model_input(scaled_input):
+        return scaled_input * 1.e15
 
     def _check_types(self, lac):
         lac = np.array(lac).reshape(-1, )

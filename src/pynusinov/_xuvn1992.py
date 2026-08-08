@@ -1,6 +1,7 @@
 import numpy as np
 import xarray as xr
 import pynusinov._misc as _m
+from importlib_metadata import version
 
 
 class Xuvn1992:
@@ -22,23 +23,24 @@ class Xuvn1992:
             i082 = (0.29 * np.array(f107).reshape(-1, ) - 18) * 1.e-6
 
             if photons:
-                i082 *= 1.4e-9 / (6.62607015e-34 * 299792458)
+                i082 *= 1.4e-9 / (6.62607015e-34 * 299792458) * 1e-4
 
             return xr.Dataset(data_vars={'i082': ('_i082', i082),
                                          'f107': ('_f107', f107)},
                               coords={'_i082': np.arange(len(i082)),
                                       '_f107': np.arange(len(f107))},
-                              attrs={'Name': 'Calсulate I 0.8-2.0 values from daily F10.7 (in s.f.u.)',
+                              attrs={'Title': 'Nusinov\'s I 0.8-2.0 model simulation results',
+                                     'Package': f'pynusinov=={version("pynusinov")}',
                                      'I 0.8-2.0 units': 'photons m^-2 · s^-1' if photons else 'W · m^-2',
-                                     'F10.7 units': 's.f.u., (1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1)'})
+                                     'F10.7 units': 's.f.u., 1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1'})
 
     @staticmethod
     def scale(si_input):
-        return si_input * 1.e4
+        return si_input * 1.e-7 * 1.e-4
 
     @staticmethod
-    def unscale(scaled_input):
-        return scaled_input * 1.e-4
+    def unscale_model_input(scaled_input):
+        return scaled_input * 1.e7 * 1.e4
 
     def get_spectral_bands(self, i082, scale_si_input=False):
         i082 = np.array(i082).reshape(-1,)
