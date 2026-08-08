@@ -1,4 +1,4 @@
-# pynusinov
+# pynusinov 3.0
 <!--Basic information-->
 pyNusinov package provides Python3 implementations of Solar (ultraviolet) irradiance models developed under supervision of 
 Professor, Dr. Anatoly Abramovich Nusinov.
