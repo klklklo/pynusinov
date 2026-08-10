@@ -25,14 +25,7 @@ class Xuvn1992:
             if photons:
                 i082 *= 1.4e-9 / (6.62607015e-34 * 299792458) * 1e-4
 
-            return xr.Dataset(data_vars={'i082': ('_i082', i082),
-                                         'f107': ('_f107', f107)},
-                              coords={'_i082': np.arange(len(i082)),
-                                      '_f107': np.arange(len(f107))},
-                              attrs={'Title': 'Nusinov\'s I 0.8-2.0 model simulation results',
-                                     'Package': f'pynusinov=={version("pynusinov")}',
-                                     'I 0.8-2.0 units': 'photons m^-2 · s^-1' if photons else 'W · m^-2',
-                                     'F10.7 units': 's.f.u., 1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1'})
+            return i082
 
     @staticmethod
     def scale(si_input):
