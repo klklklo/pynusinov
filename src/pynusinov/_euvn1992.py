@@ -31,7 +31,7 @@ class Euvn1992:
             fb = 0
             for i in range(5):
                 fb += a[i] * np.cos(2 * np.pi * i * t / 10.2) + b[i] * np.sin(2 * np.pi * i * t / 10.2)
-            hei = 1.38 + 0.111 * np.power(fb - 60, 2 / 3) + 0.0583 * np.power(f107 - fb, 2 / 3)
+            hei = np.array(1.38 + 0.111 * np.power(fb - 60, 2 / 3) + 0.0583 * np.power(f107 - fb, 2 / 3)) * 1.e-4 * 1e9
 
             return xr.Dataset(data_vars={'hei': ('_hei', hei),
                                          'f107': ('_f107', f107),
@@ -41,7 +41,7 @@ class Euvn1992:
                                       '_time': np.arange(len(t))},
                               attrs={'Title': 'Nusinov\'s HeI 1992 model simulation results',
                                      'Package': f'pynusinov=={version("pynusinov")}',
-                                     'He I units': '10^9 photons · cm^-2 · s^-1',
+                                     'He I units': 'photons · m^-2 · s^-1',
                                      'F10.7 units': 's.f.u., 1 s.f.u. = 10^-22 · W · m^-2 · Hz^-1',
                                      'Time units': 'The time from the moment the 20 or 21 solar cycle begins (in years)'})
 

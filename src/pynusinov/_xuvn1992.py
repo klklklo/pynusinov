@@ -14,7 +14,7 @@ class Xuvn1992:
 
     class I082:
         @staticmethod
-        def predict(f107, photons=False):
+        def predict(f107, photons=True):
             f107 = np.array(f107).reshape(-1, )
             for f in f107:
                 if not isinstance(f, (int, float, np.integer)):
