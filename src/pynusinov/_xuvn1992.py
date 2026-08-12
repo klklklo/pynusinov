@@ -1,7 +1,6 @@
 import numpy as np
 import xarray as xr
 import pynusinov._misc as _m
-from importlib_metadata import version
 
 
 class Xuvn1992:
@@ -23,9 +22,9 @@ class Xuvn1992:
             i082 = (0.29 * np.array(f107).reshape(-1, ) - 18) * 1.e-6
 
             if photons:
-                i082 *= 1.4e-9 / (6.62607015e-34 * 299792458) * 1e4
+                i082 *= 1.4e-9 / (6.62607015e-34 * 299792458)
 
-            return i082
+            return i082.ravel()
 
     @staticmethod
     def scale(si_input):

@@ -1,7 +1,6 @@
 import numpy as np
 import xarray as xr
 import pynusinov._misc as _m
-from importlib_metadata import version
 
 
 class Euvn1984:
@@ -10,7 +9,7 @@ class Euvn1984:
     '''
 
     def __init__(self):
-        self._bands_dataset, self._lines_dataset, self._full_dataset = _m.get_euvn1984_coeffs()
+        self._bands_coeffs, self._lines_coeffs, self._full_coeffs = _m.get_euvn1984_coeffs()
 
     class HeI1984:
         @staticmethod
@@ -27,7 +26,8 @@ class Euvn1984:
                     raise TypeError(f't must be int or float, but it was {type(_t).__name__}')
 
             fb = 63 + 482 * np.power(np.sin(np.pi * t / 10.2), 3.7) * np.exp(-5.2 * t / 10.2)
-            return np.array(0.725 + 0.160 * np.power(fb - 60, 2. / 3) + 0.0592 * np.power(f107 - fb, 2. / 3)) * 1.e4 * 1e9
+            return np.array((0.725 + 0.160 * np.power(fb - 60, 2. / 3) +
+                             0.0592 * np.power(f107 - fb, 2. / 3)) * 1.e4 * 1e9).ravel()
 
 
     @staticmethod
@@ -54,8 +54,8 @@ class Euvn1984:
         if self._check_types(_hei):
             hei = self._prepare_X(_hei)
 
-        coeffs = np.vstack((np.array(self._bands_dataset['B0'], dtype=np.float64),
-                            np.array(self._bands_dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._bands_coeffs['B0'], dtype=np.float64),
+                            np.array(self._bands_coeffs['B1'], dtype=np.float64))).T
 
         if scale_si_input:
             hei = self.scale(hei)
@@ -63,18 +63,18 @@ class Euvn1984:
         spectra = np.dot(coeffs, hei.T) * 1e13
 
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'hei'), spectra),
-                                     'lband': ('band_number', self._bands_dataset['lband'].data),
-                                     'uband': ('band_number', self._bands_dataset['uband'].data)},
+                                     'lband': ('band_number', self._bands_coeffs['lband'].data),
+                                     'uband': ('band_number', self._bands_coeffs['uband'].data)},
                           coords={'hei': hei[:, 0],
-                                  'band_center': self._bands_dataset['center'].data,
+                                  'band_center': self._bands_coeffs['center'].data,
                                   'band_number': np.arange(19)})
 
     def get_spectral_lines(self, _hei, scale_si_input=False):
         if self._check_types(_hei):
             hei = self._prepare_X(_hei)
 
-        coeffs = np.vstack((np.array(self._lines_dataset['B0'], dtype=np.float64),
-                            np.array(self._lines_dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._lines_coeffs['B0'], dtype=np.float64),
+                            np.array(self._lines_coeffs['B1'], dtype=np.float64))).T
 
         if scale_si_input:
             hei = self.scale(hei)
@@ -82,9 +82,9 @@ class Euvn1984:
         spectra = np.dot(coeffs, hei.T) * 1e13
 
         return xr.Dataset(data_vars={'euv_flux_spectra': (('line_wavelength', 'hei'), spectra),
-                                     'wavelength': ('line_number', self._lines_dataset['lambda'].data)},
+                                     'wavelength': ('line_number', self._lines_coeffs['lambda'].data)},
                           coords={'hei': hei[:, 0],
-                                  'line_wavelength': self._lines_dataset['lambda'].data,
+                                  'line_wavelength': self._lines_coeffs['lambda'].data,
                                   'line_number': np.arange(16)})
 
     def get_spectra(self, _hei, scale_si_input=False):
@@ -94,8 +94,8 @@ class Euvn1984:
         if self._check_types(_hei):
             hei = self._prepare_X(_hei)
 
-        coeffs = np.vstack((np.array(self._full_dataset['B0'], dtype=np.float64),
-                            np.array(self._full_dataset['B1'], dtype=np.float64))).T
+        coeffs = np.vstack((np.array(self._full_coeffs['B0'], dtype=np.float64),
+                            np.array(self._full_coeffs['B1'], dtype=np.float64))).T
 
         if scale_si_input:
             hei = self.scale(hei)
@@ -103,8 +103,8 @@ class Euvn1984:
         spectra = np.dot(coeffs, hei.T) * 1.e13
 
         return xr.Dataset(data_vars={'euv_flux_spectra': (('band_center', 'hei'), spectra),
-                                     'lband': ('band_number', self._full_dataset['lband'].data),
-                                     'uband': ('band_number', self._full_dataset['uband'].data)},
+                                     'lband': ('band_number', self._full_coeffs['lband'].data),
+                                     'uband': ('band_number', self._full_coeffs['uband'].data)},
                           coords={'hei': hei[:, 0],
-                                  'band_center': self._full_dataset['center'].data,
+                                  'band_center': self._full_coeffs['center'].data,
                                   'band_number': np.arange(35)})
