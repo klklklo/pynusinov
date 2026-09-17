@@ -30,8 +30,11 @@ class Euvn1992:
             fb = 0
             for i in range(5):
                 fb += a[i] * np.cos(2 * np.pi * i * t / 10.2) + b[i] * np.sin(2 * np.pi * i * t / 10.2)
-            return np.array((1.38 + 0.111 * np.power(fb - 60, 2. / 3) +
-                             0.0583 * np.power(f107 - fb, 2. / 3)) * 1.e4 * 1e9).ravel()
+
+            hei = np.array((1.38 + 0.111 * np.power(fb - 60, 2. / 3) +
+                            0.0583 * np.power(f107 - fb, 2. / 3)) * 1.e4 * 1e9)
+
+            return hei.item() if f107.size == 1 else hei.ravel()
 
     @staticmethod
     def scale(si_input):

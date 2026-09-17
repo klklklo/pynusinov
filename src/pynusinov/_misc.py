@@ -1,5 +1,5 @@
 import functools
-
+import datetime
 import pandas as pd
 import xarray as xr
 from importlib_resources import files
@@ -51,3 +51,9 @@ def photons_per_cm2_per_s_to_photons_per_m2_per_s(flux):
 
 def photons_per_m2_per_s_to_photons_per_cm2_per_s(flux):
     return flux * 1.e-4
+
+
+def get_part_of_cycle(time):
+    cycle_start_date = datetime.datetime.strptime('1964-10-01', "%Y-%m-%d")
+    date = datetime.datetime.strptime(time, "%Y-%m-%d")
+    return (date - cycle_start_date).days / 365

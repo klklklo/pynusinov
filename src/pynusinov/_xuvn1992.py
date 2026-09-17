@@ -24,7 +24,7 @@ class Xuvn1992:
             if photons:
                 i082 *= 1.4e-9 / (6.62607015e-34 * 299792458)
 
-            return i082.ravel()
+            return i082.item() if f107.size == 1 else i082.ravel()
 
     @staticmethod
     def scale(si_input):

@@ -26,8 +26,11 @@ class Euvn1984:
                     raise TypeError(f't must be int or float, but it was {type(_t).__name__}')
 
             fb = 63 + 482 * np.power(np.sin(np.pi * t / 10.2), 3.7) * np.exp(-5.2 * t / 10.2)
-            return np.array((0.725 + 0.160 * np.power(fb - 60, 2. / 3) +
-                             0.0592 * np.power(f107 - fb, 2. / 3)) * 1.e4 * 1e9).ravel()
+
+            hei = np.array((0.725 + 0.160 * np.power(fb - 60, 2. / 3) +
+                            0.0592 * np.power(f107 - fb, 2. / 3)) * 1.e4 * 1e9)
+
+            return hei.item() if f107.size == 1 else hei.ravel()
 
 
     @staticmethod
